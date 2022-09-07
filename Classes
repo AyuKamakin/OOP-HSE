@@ -1,0 +1,72 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class ingredient
+{
+    string typeOfParts;
+    float numInParts;
+    string name;
+
+public:
+    //конструкторы по умолчанию
+    ingredient()
+    {
+       typeOfParts="gramms";
+       numInParts=0;
+       name="unknown";
+    }
+    ingredient(const string& newName, const string& newType, float& newNum)
+    {
+        name = newName;
+        numInParts = newNum;
+        typeOfParts=newType;
+    }
+    ingredient(const string& newName, const string& newType)
+    {
+        name = newName;
+        numInParts = 0;
+        typeOfParts=newType;
+    }
+    ingredient(const string& newName)
+    {
+        name = newName;
+        numInParts = 0;
+        typeOfParts="gramms";
+    }
+    //конструктор копирования
+    ingredient(const ingredient & ref)
+    {
+        name = ref.name;
+        numInParts = ref.numInParts;
+        typeOfParts=ref.numInParts;
+    }
+    //деструктор
+    ~ingredient(){
+        cout<<"called destructor for "<<numInParts<<" "<<typeOfParts<<" of "<<name<<endl;
+    }
+    // методы класса
+    void setInfo(const string& newName, const string& newType, const float& newNum)
+    {
+        name = newName;
+        numInParts = newNum;
+        typeOfParts=newType;
+    }
+    void setName(const string& newName){ name = newName; }
+    void setNum(const float& newNum){ numInParts = newNum; }
+    void setTypeOfParts(const string& newType){ typeOfParts=newType; }
+
+    const string& getName() { return name;}
+    const string& getTypeOfParts() { return typeOfParts;}
+    const float& getNumber() { return numInParts;}
+    const string getInfo(){return (name+" in "+ to_string(numInParts)+" "+typeOfParts);}
+};
+int main(){
+    ingredient test=ingredient("strawberry","gramms");
+    cout << test.getNumber() << endl;
+    test.setInfo("cherries", "berries", 2);
+    cout << test.getInfo() << endl;
+    test.~ingredient();
+    return 0;
+}
