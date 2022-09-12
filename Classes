@@ -3,70 +3,70 @@
 
 using namespace std;
 
-class ingredient
+class package
 {
-    string typeOfParts;
-    float numInParts;
+    float price;
+    float size;
     string name;
 
 public:
     //конструкторы по умолчанию
-    ingredient()
+    package()
     {
-       typeOfParts="gramms";
-       numInParts=0;
+       price=0;
+       size=0;
        name="unknown";
     }
-    ingredient(const string& newName, const string& newType, float& newNum)
+    package(const string& newName, const float& newSize, const float& newPrice)
     {
         name = newName;
-        numInParts = newNum;
-        typeOfParts=newType;
+        size = newSize;
+        price=newPrice;
     }
-    ingredient(const string& newName, const string& newType)
+    package(const string& newName, const float& newSize)
     {
         name = newName;
-        numInParts = 0;
-        typeOfParts=newType;
+        size = newSize;
+        price=0;
     }
-    ingredient(const string& newName)
+    package(const string& newName)
     {
         name = newName;
-        numInParts = 0;
-        typeOfParts="gramms";
+        price = 0;
+        size=1;
     }
     //конструктор копирования
-    ingredient(const ingredient & ref)
+    package(const package & ref)
     {
         name = ref.name;
-        numInParts = ref.numInParts;
-        typeOfParts=ref.numInParts;
+        price = ref.price;
+        size =ref.size;
     }
     //деструктор
-    ~ingredient(){
-        cout<<"called destructor for "<<numInParts<<" "<<typeOfParts<<" of "<<name<<endl;
+    ~package(){
+        cout<<"called destructor for "<<name<<endl;
     }
     // методы класса
-    void setInfo(const string& newName, const string& newType, const float& newNum)
+    void setInfo(const string& newName, const float& newSize, const float& newPrice)
     {
         name = newName;
-        numInParts = newNum;
-        typeOfParts=newType;
+        size = newSize;
+        price=newPrice;
     }
     void setName(const string& newName){ name = newName; }
-    void setNum(const float& newNum){ numInParts = newNum; }
-    void setTypeOfParts(const string& newType){ typeOfParts=newType; }
+    void setSize(const float& newSize){ size = newSize; }
+    void setPrice(const float& newPrice){ price =newPrice; }
 
     const string& getName() { return name;}
-    const string& getTypeOfParts() { return typeOfParts;}
-    const float& getNumber() { return numInParts;}
-    const string getInfo(){return (name+" in "+ to_string(numInParts)+" "+typeOfParts);}
+    const float& getSize() { return size;}
+    const float& getPrice() { return price;}
+    const string getInfo(){return (name+" in size of "+ to_string(size)+" and valued in "+ to_string(price)+" money ");}
 };
 int main(){
-    ingredient test=ingredient("strawberry","gramms");
-    cout << test.getNumber() << endl;
-    test.setInfo("cherries", "berries", 2);
+    package test=package("strawberry",1);
+    cout << test.getSize() << endl;
+    test.setInfo("cherries", 1 , 2);
     cout << test.getInfo() << endl;
-    test.~ingredient();
+    test.~package();
     return 0;
 }
