@@ -1,72 +1,76 @@
 #include <iostream>
-#include <string>
-
+#include <cstring>
+#define DEBUG 0
 using namespace std;
 
-class package
+class Package
 {
     float price;
     float size;
-    string name;
-
+    char *name = nullptr;
 public:
     //конструкторы по умолчанию
-    package()
+    Package()
     {
-       price=0;
-       size=0;
-       name="unknown";
+        price=0;
+        size=0;
     }
-    package(const string& newName, const float& newSize, const float& newPrice)
+    Package(const char* newName, const float& newSize, const float& newPrice)
     {
-        name = newName;
+        name = strdup(newName);
         size = newSize;
         price=newPrice;
     }
-    package(const string& newName, const float& newSize)
+    Package(const char* newName, const float& newSize)
     {
-        name = newName;
+        name = strdup(newName);
         size = newSize;
         price=0;
     }
-    package(const string& newName)
+    Package(const char* newName)
     {
-        name = newName;
-        price = 0;
+        name = strdup(newName);
+        price = 1;
         size=1;
     }
     //конструктор копирования
-    package(const package & ref)
+    Package(const Package &ref)
     {
         name = ref.name;
         price = ref.price;
         size =ref.size;
     }
     //деструктор
-    ~package(){
+    ~Package(){
+    delete[] name;
+#if DEBUG==1
         cout<<"called destructor for "<<name<<endl;
+#endif
     }
     // методы класса
-    void setInfo(const string& newName, const float& newSize, const float& newPrice)
+    const void setInfo(const char* newName, const float& newSize, const float& newPrice)
     {
-        name = newName;
+        name = strdup(newName);
         size = newSize;
         price=newPrice;
     }
-    void setName(const string& newName){ name = newName; }
-    void setSize(const float& newSize){ size = newSize; }
-    void setPrice(const float& newPrice){ price =newPrice; }
+    const void setName(const char* newName){ name = strdup(newName); }
+    const void setSize(const float& newSize){ size = newSize; }
+    const void setPrice(const float& newPrice){ price =newPrice; }
 
-    const string& getName() { return name;}
-    const float& getSize() { return size;}
-    const float& getPrice() { return price;}
-    const string getInfo(){return (name+" in size of "+ to_string(size)+" and valued in "+ to_string(price)+" money ");}
+    const char* getName() {
+        if(name!=NULL)return name;
+    }
+    const float& getSize() const { if(size!=0)return size;}
+    const float& getPrice() const {if(price!=0) return price;}
 };
 int main(){
-    package test=package("strawberry",1);
+    Package test=Package();
+    cout<<"created ";
+    //cout << test.getName() << endl;
     cout << test.getSize() << endl;
     test.setInfo("cherries", 1 , 2);
-    cout << test.getInfo() << endl;
-    test.~package();
+    cout <<"size: "<< test.getSize() <<" name: "<< test.getName()<<" price: "<<test.getPrice()<<endl;
+    //test.~Package();
     return 0;
 }
