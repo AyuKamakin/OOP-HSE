@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <cassert>
 #define DEBUG 0
 using namespace std;
 
@@ -18,20 +19,23 @@ public:
     Package(const char* newName, const float& newSize, const float& newPrice)
     {
         name = strdup(newName);
-        size = newSize;
-        price=newPrice;
+        if(newSize>0&newSize<1001)size = newSize;
+        else size=0;
+        if(newPrice>0&newPrice<1001)price = newPrice;
+        else price=0;
     }
     Package(const char* newName, const float& newSize)
     {
         name = strdup(newName);
-        size = newSize;
+        if(newSize>0&newSize<1001)size = newSize;
+        else size=0;
         price=0;
     }
     Package(const char* newName)
     {
         name = strdup(newName);
-        price = 1;
-        size=1;
+        price = 0;
+        size=0;
     }
     //конструктор копирования
     Package(const Package &ref)
@@ -42,7 +46,7 @@ public:
     }
     //деструктор
     ~Package(){
-    delete[] name;
+        delete[] name;
 #if DEBUG==1
         cout<<"called destructor for "<<name<<endl;
 #endif
@@ -51,26 +55,53 @@ public:
     const void setInfo(const char* newName, const float& newSize, const float& newPrice)
     {
         name = strdup(newName);
-        size = newSize;
-        price=newPrice;
+        if(newSize>0&newSize<1001)size = newSize;
+        else size=0;
+        if(newPrice>0&newPrice<1001)price = newPrice;
+        else price=0;
     }
     const void setName(const char* newName){ name = strdup(newName); }
-    const void setSize(const float& newSize){ size = newSize; }
-    const void setPrice(const float& newPrice){ price =newPrice; }
+    const void setSize(const float& newSize){
+        if(newSize>0&newSize<1001)size = newSize;
+        else size=0;
+    }
+    const void setPrice(const float& newPrice){
+        if(newPrice>0&newPrice<1001)price = newPrice;
+        else price=0;
+    }
 
     const char* getName() {
         if(name!=NULL)return name;
+        else return "";
     }
-    const float& getSize() const { if(size!=0)return size;}
-    const float& getPrice() const {if(price!=0) return price;}
+    const float& getSize() const { return size;}
+    const float& getPrice() const { return price;}
 };
 int main(){
-    Package test=Package();
-    cout<<"created ";
-    //cout << test.getName() << endl;
-    cout << test.getSize() << endl;
-    test.setInfo("cherries", 1 , 2);
-    cout <<"size: "<< test.getSize() <<" name: "<< test.getName()<<" price: "<<test.getPrice()<<endl;
-    //test.~Package();
-    return 0;
+    char *str="test";
+    Package test=Package("test", 1002,3);
+    assert(test.getSize()==0);
+    string a=strdup(test.getName());
+    assert(a=="test");
+    assert(test.getPrice()==3);
+    test.setInfo("test1", 1, -1);
+    assert(test.getSize()==1);
+    a=strdup(test.getName());
+    assert(a=="test1");
+    assert(test.getPrice()==0);
+    test.setSize(4);
+    assert(test.getSize()==4);
+    test.setPrice(8);
+    assert(test.getPrice()==8);
+    Package test2=Package(test);
+    assert(test.getSize()==test2.getSize());
+    a=strdup(test.getName());
+    string b=strdup(test2.getName());
+    assert(a==b);
+    assert(test.getPrice()==test2.getPrice());
+    Package test3=Package();
+    assert(test3.getSize()==0);
+    a=strdup(test3.getName());
+    assert(a=="");
+    assert(test3.getPrice()==0);
 }
