@@ -1,0 +1,33 @@
+#include <iostream>
+#include <cstring>
+#include <cassert>
+using namespace std;
+#include "Package.cpp"
+int main(){
+    char *str="test";
+    Package test=Package("test", 1002,3);
+    assert(test.getSize()==0);
+    string a=strdup(test.getName());
+    assert(a=="test");
+    assert(test.getPrice()==3);
+    test.setInfo("test1", 1, -1);
+    assert(test.getSize()==1);
+    a=strdup(test.getName());
+    assert(a=="test1");
+    assert(test.getPrice()==0);
+    test.setSize(4);
+    assert(test.getSize()==4);
+    test.setPrice(8);
+    assert(test.getPrice()==8);
+    Package test2=Package(test);
+    assert(test.getSize()==test2.getSize());
+    a=strdup(test.getName());
+    string b=strdup(test2.getName());
+    assert(a==b);
+    assert(test.getPrice()==test2.getPrice());
+    Package test3=Package();
+    assert(test3.getSize()==0);
+    a=strdup(test3.getName());
+    assert(a=="");
+    assert(test3.getPrice()==0);
+}
