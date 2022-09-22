@@ -2,6 +2,7 @@
 #include <cstring>
 #include <cassert>
 using namespace std;
+//#include "Package.cpp"
 #include "Package.h"
 #define DEBUG 0
 #define incorrectNum1 10000
@@ -17,13 +18,11 @@ int main(){
 //тест стандартного консруктора и методов получения параметров
     Package test=Package(correctName1, incorrectNum1,correctNum1);
     assert(test.getSize()==0);
-    string a=strdup(test.getName());
-    assert(a==correctName1);
+    assert(!strcmp(test.getName(),correctName1));
     assert(test.getPrice()==correctNum1);
     test.setInfo(correctName2, correctNum2, incorrectNum2);
     assert(test.getSize()==correctNum2);
-    a=test.getName();
-    assert(a==correctName2);
+    assert(!strcmp(test.getName(),correctName2));
     assert(test.getPrice()==0);
     //методы изменения параметров
     test.setSize(correctNum3);
@@ -33,17 +32,13 @@ int main(){
     //конструктор копирования
     Package test2=Package(test);
     assert(test.getSize()==test2.getSize());
-    a=strdup(test.getName());
-    string b=strdup(test2.getName());
-    assert(a==b);
+    assert(!strcmp(test.getName(),test2.getName()));
     assert(test.getPrice()==test2.getPrice());
     //конструктор по умолчанию
     Package test3=Package();
     assert(test3.getSize()==0);
-    a=strdup(test3.getName());
-    assert(a=="");
+    assert(!strcmp(test3.getName(),""));
     assert(test3.getPrice()==0);
     test3.setName(incorrectName);
-    a=strdup(test3.getName());
-    assert(a=="");
+    assert(!strcmp(test3.getName(),""));
 }
