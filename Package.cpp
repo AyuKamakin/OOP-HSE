@@ -80,10 +80,7 @@ const float &Package::getSize() const { return size;}
 
 const float &Package::getPrice() const { return price;}
 
-const double &Package::getValue() const{
-    if(size!=0){
-        double val =price/size; return (val);
-    }
+const float Package::getValue() const{
+    if(size!=0)return (price/size);
     else return 0;
 };
-
