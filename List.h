@@ -3,17 +3,16 @@
 #define UNTITLED_LIST_H
 using namespace std;
 struct node{
+public:
     Package data;
     node * next, * prev;
     float value;
 };
 class List
 {
-protected:
+public:
     node * first, * last;
     int len;
-
-public:
     List();;
     List(const List& L);;
     ~List();;
