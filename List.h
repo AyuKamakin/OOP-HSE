@@ -22,7 +22,8 @@ public:
     int GetLen() const;;
     node* GetElem(int pos) const;;
     void Insert(const Package n,const int pos);;
-    void Insert(const Package n);
+    void Insert(const Package n);;
+    void InsertWSort(const Package n);;
     void Print() const;;
     void Print(int pos) const;;
 };
