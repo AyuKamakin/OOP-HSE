@@ -1,20 +1,22 @@
 #include <iostream>
 #include <cstring>
 #include "Package.h"
+#include <fstream>
+
 #define DEBUG 0
 #define maxLen 10
-#define maxFloat 1000
+#define maxFloat 100000
 #define minFloat 1
 using namespace std;
 Package::Package() {
     price=0;
     size=0;
 }
-bool check(const float& n){
+bool check(const int32_t& n){
     if(n>=minFloat&n<maxFloat) return true;
     else return false;
 }
-Package::Package(const char *newName, const float &newSize, const float &newPrice) {
+Package::Package(const char *newName, const int32_t &newSize, const int32_t &newPrice) {
     if(strlen(strdup(newName))<=maxLen)name = strdup(newName);
     else name= nullptr;
     if(check)size = newSize;
@@ -23,7 +25,7 @@ Package::Package(const char *newName, const float &newSize, const float &newPric
     else price=0;
 }
 
-Package::Package(const char *newName, const float &newSize) {
+Package::Package(const char *newName, const int32_t &newSize) {
     if(strlen(strdup(newName))<=maxLen)name = strdup(newName);
     else name= nullptr;
     if(check)size = newSize;
@@ -50,7 +52,7 @@ Package::~Package() {
 #endif
 }
 
-void Package::setInfo(const char *newName, const float &newSize, const float &newPrice) {
+void Package::setInfo(const char *newName, const int32_t &newSize, const int32_t &newPrice) {
     if(strlen(strdup(newName))<=maxLen)name = strdup(newName);
     else name= nullptr;
     if(check)size = newSize;
@@ -64,12 +66,12 @@ void Package::setName(const char *newName) {
     else name= nullptr;
 }
 
-void Package::setSize(const float &newSize) {
+void Package::setSize(const int32_t &newSize) {
     if(check)size = newSize;
     else size=0;
 }
 
-void Package::setPrice(const float &newPrice) {
+void Package::setPrice(const int32_t &newPrice) {
     if(check)price = newPrice;
     else price=0;
 }
@@ -78,12 +80,32 @@ const char *Package::getName() const {
     if(name!=NULL)return name;
     else return "";
 }
-const float &Package::getSize() const { return size;}
+const int32_t &Package::getSize() const { return size;}
 
-const float &Package::getPrice() const { return price;}
+const int32_t &Package::getPrice() const { return price;}
 
 const float Package::getValue() const{
-    if(size>0)return (price/size);
+    if(size>0)return ((float)price/size);
     else return 0;
-};
+}
+void Package::readFromF(const string filename){
+    ifstream file;
+    file.open(filename);
+    if(file.is_open()){
+        string temp;
+        file>>temp>>size>>price;
+        name= strdup(temp.c_str());
+        file.close();
+    }
+    return;
+}
+void Package::writeToF(const string filename)const{
+    ofstream file;
+    file.open(filename);
+    if(file.is_open()){
+        file<<name<<" "<<size<<" "<<price;
+        file.close();
+    }
+    return;
 
+}
