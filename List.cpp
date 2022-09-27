@@ -55,12 +55,15 @@ int List::GetLen() const {
 void List::Print() const{
     if(len != 0){
         node * temp = first;
-        cout << "( ";
+        int i=1;
         while(temp->next != 0){
-            cout << temp->data.getName() << ", ";
+            cout <<"num "<<i<<": "<< temp->data.getName() << ", size "<<
+            temp->data.getSize()<< ", price "<<temp->data.getPrice()<< ", value "<<temp->data.getValue()<<endl;
             temp = temp->next;
+            i++;
         }
-        cout << temp->data.getName() << " )\n";
+        cout <<"num "<<i<<": "<< temp->data.getName() << ", size "<<
+             temp->data.getSize()<< ", price "<<temp->data.getPrice()<< ", value "<<temp->data.getValue()<<endl;
     }
 }
 
@@ -72,7 +75,7 @@ void List::Print(int pos) const {
         return;
     }
     node * temp;
-    if(pos <= len / 2){
+    if(pos <= len/2){
         temp = first;
         for(int i=1;i<pos;i++){
             temp = temp->next;
@@ -128,7 +131,56 @@ void List::Insert(const Package n, const int pos) {
     Ins->prev = temp;
     len++;
 }
-
+void List::InsertWSort(const Package n) {
+    node * temp = new node;
+    temp->data = n;
+    if(len==0){
+        first=last=temp;
+        temp->next=0;
+        temp->prev=0;
+    }
+    else if(len==1){
+        if(temp->data.getValue()>first->data.getValue()){
+            first->next=temp;
+            temp->prev=first;
+            temp->next=0;
+            last=temp;
+        }
+        else{
+            last=first;
+            first=temp;
+            temp->next=last;
+            temp->prev=0;
+            last->next=0;
+            last->prev=temp;
+        }
+    }
+    else{
+        if(temp->data.getValue()<=first->data.getValue()){
+            temp->next=first;
+            temp->prev=0;
+            first=temp;
+        }
+        else if(temp->data.getValue()>=last->data.getValue()){
+            temp->prev=last;
+            temp->next=0;
+            last=temp;
+        }
+        else{
+            node * curr=first;
+            node * ncurr=curr->next;
+            while (!(curr->data.getValue() <= temp->data.getValue() && ncurr->data.getValue() >= temp->data.getValue())) {
+                curr=ncurr;
+                ncurr=curr->next;
+            }
+            temp->prev=curr;
+            temp->next=ncurr;
+            curr->next=temp;
+            ncurr->prev=temp;
+        }
+    }
+    len++;
+}
 node *List::GetElem(int pos) const {
     node *curr = first;
     if(pos < 1 || pos > len){
