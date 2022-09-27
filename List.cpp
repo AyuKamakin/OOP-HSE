@@ -87,8 +87,8 @@ void List::Print(int pos) const {
             temp = temp->prev;
         }
     }
-    cout << pos << " element: ";
-    cout << temp->data.getName() << endl;
+    cout<<"size "<<temp->data.getSize()<< ", price "<<temp->data.getPrice()<< ", value "<<temp->data.getValue()<<endl;
+
 }
 
 //Добавление элемента
@@ -167,9 +167,9 @@ void List::InsertWSort(const Package n) {
             last=temp;
         }
         else{
-            node * curr=first;
-            node * ncurr=curr->next;
-            while (!(curr->data.getValue() <= temp->data.getValue() && ncurr->data.getValue() >= temp->data.getValue())) {
+            node* curr=first;
+            node* ncurr=curr->next;
+            while ((!(curr->data.getValue() <= temp->data.getValue() && ncurr->data.getValue() >= temp->data.getValue()))&&ncurr!=0) {
                 curr=ncurr;
                 ncurr=curr->next;
             }
@@ -184,9 +184,6 @@ void List::InsertWSort(const Package n) {
 node *List::GetElem(int pos) const {
     node *curr = first;
     if(pos < 1 || pos > len){
-#if DEBUG==1
-        cout << "Incorrect position !!!\n";
-#endif
         return 0;
     }
     int i = 1;
