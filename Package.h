@@ -25,6 +25,7 @@ public:
     const char* getName() const;
     const float& getSize() const;
     const float& getPrice() const;
+    const double& getValue() const;
 };
 
 #endif //UNTITLED_PACKAGE_H
