@@ -30,6 +30,10 @@ public:
     void Insert(const Package n);;
     void InsertWSort(const Package n);;
 
+    void FromFile(const string filename);;
+    void ToFile(const string filename);;
+
+
     void Print() const;;
     void Print(int pos) const;;
 
