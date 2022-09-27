@@ -12,10 +12,10 @@ List::List() {
 List::List(const List &L) {
     first = last = NULL;
     len = 0;
-    node * temp = L.first;
+    node * temp = L.last;
     while(temp != 0){
         Insert(temp->data,1);
-        temp = temp->next;
+        temp = temp->prev;
     }
 }
 
