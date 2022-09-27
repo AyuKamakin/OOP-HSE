@@ -16,7 +16,20 @@ using namespace std;
 #define correctName1 "box"
 #define correctName2 "fridge"
 #define incorrectName "aaaaaaaaaaaar"
-
+void printList(const int len, node* first){
+    if(len != 0){
+        node * temp = first;
+        int i=1;
+        while(temp->next != 0){
+            cout <<"num "<<i<<": "<< temp->data.getName() << ", size "<<
+                 temp->data.getSize()<< ", price "<<temp->data.getPrice()<< ", value "<<temp->data.getValue()<<endl;
+            temp = temp->next;
+            i++;
+        }
+        cout <<"num "<<i<<": "<< temp->data.getName() << ", size "<<
+             temp->data.getSize()<< ", price "<<temp->data.getPrice()<< ", value "<<temp->data.getValue()<<endl;
+    }
+}
 int main(){
 //тест стандартного консруктора и методов получения параметров класса Package
 #if DEBUG==1
@@ -47,17 +60,22 @@ int main(){
     assert(!strcmp(test3.getName(),""));
 #endif
 #if DEBUG==2
-    Package test1 = Package("two", 2, 8);
-    Package test2 = Package("five", 10, 1);
-    Package test3 = Package("three", 3, 6);
-    Package test4 = Package("one", 100, 4);
-    Package test5 = Package("four", 1, 2);
+    Package two = Package("two", 10, 2);
+    Package five = Package("five", 10, 5);
+    Package three = Package("three", 10, 3);
+    Package one = Package("one", 10, 1);
+    Package four = Package("four", 10, 4);
+    Package six = Package("six", 10, 6);
     List list=List();
-    list.InsertWSort(test3);
-    list.InsertWSort(test4);
-    list.InsertWSort(test1);
-    list.InsertWSort(test2);
-    list.InsertWSort(test5);
-    list.Print(5);
+    list.InsertWSort(four);
+    list.InsertWSort(one);
+    list.InsertWSort(five);
+    list.InsertWSort(two);
+
+    list.Print();
+    List list2=List(list);
+    cout<<endl;
+    printList(list.GetLen(),list.GetElem(1));
+    list.Destruction();
 #endif
 }
