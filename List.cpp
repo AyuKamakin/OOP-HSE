@@ -162,14 +162,15 @@ void List::InsertWSort(const Package n) {
             first=temp;
         }
         else if(temp->data.getValue()>=last->data.getValue()){
-            temp->prev=last;
+            last->next=temp;
             temp->next=0;
+            temp->prev=last;
             last=temp;
         }
         else{
             node* curr=first;
             node* ncurr=curr->next;
-            while ((!(curr->data.getValue() <= temp->data.getValue() && ncurr->data.getValue() >= temp->data.getValue()))&&ncurr!=0) {
+            while (!(curr->data.getValue() <= temp->data.getValue() && ncurr->data.getValue() >= temp->data.getValue())) {
                 curr=ncurr;
                 ncurr=curr->next;
             }
