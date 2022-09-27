@@ -1,10 +1,10 @@
 #include <iostream>
 #include <cstring>
 #include <cassert>
-using namespace std;
-//#include "Package.cpp"
+#include <fstream>
 #include "Package.h"
 #include "List.h"
+using namespace std;
 
 #define DEBUG 2
 #define incorrectNum1 10000
@@ -16,7 +16,10 @@ using namespace std;
 #define correctName1 "box"
 #define correctName2 "fridge"
 #define incorrectName "aaaaaaaaaaaar"
-void printList(node* start){
+void printList(List list, const bool how){
+    node* start;
+    if(how) start=list.Head();
+    else start=list.Tail();
     if(start->prev==0){
     if(start!=0){
         node * temp = start;
@@ -46,7 +49,9 @@ void printList(node* start){
         }
     }
 }
-bool compare(node* firstOne, node* firstSec){
+bool compare(const List list1, const List list2){
+    node* firstOne=list1.Head();
+    node* firstSec=list2.Head();
     if(firstOne!=0&&firstSec!=0&&firstOne->prev==0&&firstSec->prev==0){
         node* temp = firstOne;
         node* temp2 = firstSec;
@@ -100,7 +105,7 @@ int main(){
     Package five = Package("five", 10, 5);
     Package three = Package("three", 10, 3);
     Package one = Package("one", 10, 1);
-    Package four = Package("four", 10, 4);
+    /*Package four = Package("four", 10, 4);
     Package six = Package("six", 10, 6);
     List list=List();
     list.Insert(four);
@@ -110,6 +115,19 @@ int main(){
     list.Print();
     cout<<list.IfSorted()<<endl;
     list.Sort();
-    list.Print();
+    list.Print();*/
+    //Package temp=Package("box", 16, 32);
+    //temp.writeToF("toFrom.txt");
+    List list;
+    list.InsertWSort(two);
+    list.InsertWSort(five);
+    list.InsertWSort(three);
+    list.InsertWSort(one);
+    list.ToFile("toFrom.txt");
+    List list2=List();
+    list2.FromFile("toFrom.txt");
+    printList(list,1);
+    printList(list2,1);
+    assert(compare(list,list2));
 #endif
 }
