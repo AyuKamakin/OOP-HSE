@@ -16,9 +16,10 @@ using namespace std;
 #define correctName1 "box"
 #define correctName2 "fridge"
 #define incorrectName "aaaaaaaaaaaar"
-void printList(const int len, node* first){
-    if(len != 0){
-        node * temp = first;
+void printList(node* start){
+    if(start->prev==0){
+    if(start!=0){
+        node * temp = start;
         int i=1;
         while(temp->next != 0){
             cout <<"num "<<i<<": "<< temp->data.getName() << ", size "<<
@@ -29,6 +30,41 @@ void printList(const int len, node* first){
         cout <<"num "<<i<<": "<< temp->data.getName() << ", size "<<
              temp->data.getSize()<< ", price "<<temp->data.getPrice()<< ", value "<<temp->data.getValue()<<endl;
     }
+    }
+    else{
+        if(start!=0){
+            node * temp = start;
+            int i=1;
+            while(temp->prev != 0){
+                cout <<"num "<<i<<": "<< temp->data.getName() << ", size "<<
+                     temp->data.getSize()<< ", price "<<temp->data.getPrice()<< ", value "<<temp->data.getValue()<<endl;
+                temp = temp->prev;
+                i++;
+            }
+            cout <<"num "<<i<<": "<< temp->data.getName() << ", size "<<
+                 temp->data.getSize()<< ", price "<<temp->data.getPrice()<< ", value "<<temp->data.getValue()<<endl;
+        }
+    }
+}
+bool compare(node* firstOne, node* firstSec){
+    if(firstOne!=0&&firstSec!=0&&firstOne->prev==0&&firstSec->prev==0){
+        node* temp = firstOne;
+        node* temp2 = firstSec;
+        while(temp->next != 0 && temp2->next!=0){
+            assert(temp->data.getValue()==temp2->data.getValue());
+            assert(temp->data.getSize()==temp2->data.getSize());
+            assert(temp->data.getPrice()==temp2->data.getPrice());
+            assert(!strcmp(temp->data.getName(),temp2->data.getName()));
+            temp = temp->next;
+            temp2 = temp2->next;
+        }
+        assert(temp->data.getValue()==temp2->data.getValue());
+        assert(temp->data.getSize()==temp2->data.getSize());
+        assert(temp->data.getPrice()==temp2->data.getPrice());
+        assert(!strcmp(temp->data.getName(),temp2->data.getName()));
+        return 1;
+    }
+    else return 0;
 }
 int main(){
 //тест стандартного консруктора и методов получения параметров класса Package
@@ -67,15 +103,13 @@ int main(){
     Package four = Package("four", 10, 4);
     Package six = Package("six", 10, 6);
     List list=List();
-    list.InsertWSort(four);
-    list.InsertWSort(one);
-    list.InsertWSort(five);
-    list.InsertWSort(two);
-
+    list.Insert(four);
+    list.Insert(two);
+    list.Insert(one);
+    list.Insert(five);
     list.Print();
-    List list2=List(list);
-    cout<<endl;
-    printList(list.GetLen(),list.GetElem(1));
-    list.Destruction();
+    cout<<list.IfSorted()<<endl;
+    list.Sort();
+    list.Print();
 #endif
 }
