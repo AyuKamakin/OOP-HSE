@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "Package.h"
 #include "List.h"
 
@@ -25,7 +26,30 @@ List::List(const List &L) {
 List::~List() {
     Destruction();
 }
-
+void List::FromFile(const string filename){
+    ifstream file;
+    file.open(filename);
+    string name;
+    int32_t size, price;
+    Package temp;
+    while(file>>name>>size>>price){
+        temp.setInfo(name.c_str(),size,price);
+        InsertWSort(temp);
+    }
+    file.close();
+}
+void List::ToFile(const string filename) {
+    ofstream file;
+    file.open(filename);
+    node* temp=first;
+    if(file.is_open()) {
+        while (temp != 0) {
+            file << temp->data.getName() <<" "<< temp->data.getSize() <<" "<< temp->data.getPrice()<<"\n";
+            temp = temp->next;
+        }
+    }
+    file.close();
+}
 void List::Destruction() {
     while (len != 0) Del(1);
 }
@@ -244,5 +268,16 @@ void List::Sort() const {
         }
     }
 }
-
+void GetFromFile(const string s){
+    ifstream file;
+    file.open("toFrom");
+    Package temp=Package();
+    char* a;
+    float b;
+    float c;
+    while(file.is_open()){
+        file>>b>>c>>a;
+    }
+    file.close();
+}
 
