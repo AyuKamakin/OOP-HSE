@@ -6,7 +6,7 @@ using namespace std;
 #include "Package.h"
 #include "List.h"
 
-#define DEBUG 0
+#define DEBUG 2
 #define incorrectNum1 10000
 #define incorrectNum2 -100
 #define correctNum1 10
@@ -46,14 +46,18 @@ int main(){
     test3.setName(incorrectName);
     assert(!strcmp(test3.getName(),""));
 #endif
-    Package test1 = Package("box", 2, 5);
-    Package test2 = Package("sup", 10, 5);
-    Package test3 = Package("dun", 2, 5);
+#if DEBUG==2
+    Package test1 = Package("two", 2, 8);
+    Package test2 = Package("five", 10, 1);
+    Package test3 = Package("three", 3, 6);
+    Package test4 = Package("one", 100, 4);
+    Package test5 = Package("four", 1, 2);
     List list=List();
-    list.Insert(test1);
-    list.Insert(test2);
-    list.Insert(test3);
-    list.Print();
-    list.Print(2);
-    list.Destruction();
+    list.InsertWSort(test3);
+    list.InsertWSort(test4);
+    list.InsertWSort(test1);
+    list.InsertWSort(test2);
+    list.InsertWSort(test5);
+    list.Print(5);
+#endif
 }
