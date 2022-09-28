@@ -26,8 +26,8 @@ public:
     const int32_t& getSize() const;
     const int32_t& getPrice() const;
     const float getValue() const;
-    void readFromF(const string filename);
-    void writeToF(const string filename) const;
+    void readFromF(const string& filename);
+    void writeToF(const string& filename) const;
 };
 
 #endif //UNTITLED_PACKAGE_H
