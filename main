@@ -4,76 +4,95 @@
 #include <fstream>
 #include "Package.h"
 #include "List.h"
+
 using namespace std;
 
 #define DEBUG 2
-#define incorrectNum1 10000
+#define incorrectNum1 1000000000000
 #define incorrectNum2 -100
 #define correctNum1 10
 #define correctNum2 99
 #define correctNum3 50
 #define correctNum4 75
+#define correctNum5 6843
+#define correctNum6 3
+#define correctNum7 5
+#define correctNum8 863
+#define bigNum 10000000
+#define one 1
 #define correctName1 "box"
 #define correctName2 "fridge"
+#define correctName3 "package"
+#define correctName4 "What"
+#define correctName5 "orange"
+#define correctName6 "small"
 #define incorrectName "aaaaaaaaaaaar"
-void printList(List list, const bool how){
-    node* start;
-    if(how) start=list.Head();
-    else start=list.Tail();
-    if(start->prev==0){
-    if(start!=0){
-        node * temp = start;
-        int i=1;
-        while(temp->next != 0){
-            cout <<"num "<<i<<": "<< temp->data.getName() << ", size "<<
-                 temp->data.getSize()<< ", price "<<temp->data.getPrice()<< ", value "<<temp->data.getValue()<<endl;
-            temp = temp->next;
-            i++;
-        }
-        cout <<"num "<<i<<": "<< temp->data.getName() << ", size "<<
-             temp->data.getSize()<< ", price "<<temp->data.getPrice()<< ", value "<<temp->data.getValue()<<endl;
-    }
-    }
-    else{
-        if(start!=0){
-            node * temp = start;
-            int i=1;
-            while(temp->prev != 0){
-                cout <<"num "<<i<<": "<< temp->data.getName() << ", size "<<
-                     temp->data.getSize()<< ", price "<<temp->data.getPrice()<< ", value "<<temp->data.getValue()<<endl;
-                temp = temp->prev;
+#define filename "toFrom.txt"
+
+void printList(List list, const bool how) {
+    node *start;
+    if (how) start = list.Head();
+    else start = list.Tail();
+    if (start->prev == 0) {
+        if (start != 0) {
+            node *temp = start;
+            int i = 1;
+            while (temp->next != 0) {
+                cout << "num " << i << ": " << temp->data.getName() << ", size " <<
+                     temp->data.getSize() << ", price " << temp->data.getPrice() << ", value " << temp->data.getValue()
+                     << endl;
+                temp = temp->next;
                 i++;
             }
-            cout <<"num "<<i<<": "<< temp->data.getName() << ", size "<<
-                 temp->data.getSize()<< ", price "<<temp->data.getPrice()<< ", value "<<temp->data.getValue()<<endl;
+            cout << "num " << i << ": " << temp->data.getName() << ", size " <<
+                 temp->data.getSize() << ", price " << temp->data.getPrice() << ", value " << temp->data.getValue()
+                 << endl;
+        }
+    } else {
+        if (start != 0) {
+            node *temp = start;
+            int i = list.GetLen();
+            while (temp->prev != 0) {
+                cout << "num " << i << ": " << temp->data.getName() << ", size " <<
+                     temp->data.getSize() << ", price " << temp->data.getPrice() << ", value " << temp->data.getValue()
+                     << endl;
+                temp = temp->prev;
+                i--;
+            }
+            cout << "num " << i << ": " << temp->data.getName() << ", size " <<
+                 temp->data.getSize() << ", price " << temp->data.getPrice() << ", value " << temp->data.getValue()
+                 << endl;
         }
     }
 }
-bool compare(const List list1, const List list2){
-    node* firstOne=list1.Head();
-    node* firstSec=list2.Head();
-    if(firstOne!=0&&firstSec!=0&&firstOne->prev==0&&firstSec->prev==0){
-        node* temp = firstOne;
-        node* temp2 = firstSec;
-        while(temp->next != 0 && temp2->next!=0){
-            assert(temp->data.getValue()==temp2->data.getValue());
-            assert(temp->data.getSize()==temp2->data.getSize());
-            assert(temp->data.getPrice()==temp2->data.getPrice());
-            assert(!strcmp(temp->data.getName(),temp2->data.getName()));
+
+bool compare(const List list1, const List list2) {
+    node *firstOne = list1.Head();
+    node *firstSec = list2.Head();
+    if (firstOne != 0 && firstSec != 0 && firstOne->prev == 0 && firstSec->prev == 0 &&
+        list1.GetLen() == list2.GetLen()) {
+        node *temp = firstOne;
+        node *temp2 = firstSec;
+        while (temp->next != 0 && temp2->next != 0) {
+            assert(temp->data.getValue() == temp2->data.getValue());
+            assert(temp->data.getSize() == temp2->data.getSize());
+            assert(temp->data.getPrice() == temp2->data.getPrice());
+            assert(!strcmp(temp->data.getName(), temp2->data.getName()));
             temp = temp->next;
             temp2 = temp2->next;
         }
-        assert(temp->data.getValue()==temp2->data.getValue());
-        assert(temp->data.getSize()==temp2->data.getSize());
-        assert(temp->data.getPrice()==temp2->data.getPrice());
-        assert(!strcmp(temp->data.getName(),temp2->data.getName()));
+        assert(temp->data.getValue() == temp2->data.getValue());
+        assert(temp->data.getSize() == temp2->data.getSize());
+        assert(temp->data.getPrice() == temp2->data.getPrice());
+        assert(!strcmp(temp->data.getName(), temp2->data.getName()));
         return 1;
-    }
-    else return 0;
+    } else return 0;
 }
-int main(){
-//тест стандартного консруктора и методов получения параметров класса Package
-#if DEBUG==1
+
+int main() {
+#if DEBUG == 1
+    //тест стандартного консруктора и методов получения параметров класса Package
+
     Package test=Package(correctName1, incorrectNum1,correctNum1);
     assert(test.getSize()==0);
     assert(!strcmp(test.getName(),correctName1));
@@ -100,34 +119,61 @@ int main(){
     test3.setName(incorrectName);
     assert(!strcmp(test3.getName(),""));
 #endif
-#if DEBUG==2
-    Package two = Package("two", 10, 2);
-    Package five = Package("five", 10, 5);
-    Package three = Package("three", 10, 3);
-    Package one = Package("one", 10, 1);
-    /*Package four = Package("four", 10, 4);
-    Package six = Package("six", 10, 6);
-    List list=List();
-    list.Insert(four);
-    list.Insert(two);
-    list.Insert(one);
-    list.Insert(five);
-    list.Print();
-    cout<<list.IfSorted()<<endl;
-    list.Sort();
-    list.Print();*/
-    //Package temp=Package("box", 16, 32);
-    //temp.writeToF("toFrom.txt");
-    List list;
-    list.InsertWSort(two);
-    list.InsertWSort(five);
-    list.InsertWSort(three);
-    list.InsertWSort(one);
-    list.ToFile("toFrom.txt");
-    List list2=List();
-    list2.FromFile("toFrom.txt");
-    printList(list,1);
-    printList(list2,1);
-    assert(compare(list,list2));
+#if DEBUG == 2
+    //Конструктор по умолчанию
+    List list1 = List();
+    int *a = new int;
+    *a = list1.GetLen();
+    Package temp = Package(correctName1, correctNum1, correctNum4);
+    //Проверка методов вставки
+    list1.InsertWSort(temp);
+    Package test=list1.Tail()->data;
+    temp.setInfo(correctName2, correctNum4, correctNum3);
+    list1.Insert(temp);
+    assert(list1.Tail()->data.getValue()!=test.getValue());
+    temp.setInfo(correctName3, 1000000, 1);
+    test=list1.GetElem(list1.GetLen()-1)->data;
+    list1.InsertBetween(temp, list1.GetLen() - 1, list1.GetLen());
+    assert(list1.GetElem(list1.GetLen()-1)->data.getValue()!=test.getValue());
+    temp.setInfo(correctName4, correctNum7, correctNum8);
+    test=list1.Head()->data;
+    list1.InsertBetween(temp,0,1);
+    assert(list1.Head()->data.getValue()!=test.getValue());
+    temp.setInfo(correctName5, correctNum5, correctNum6);
+    test=list1.GetElem(3)->data;
+    list1.InsertBetween(temp, 2, 3);
+    assert(list1.GetElem(3)->data.getValue()!=test.getValue());
+    temp.setInfo(incorrectName, incorrectNum1, incorrectNum2);
+    //этой вставки не должно произойти, неверное имя у temp
+    list1.InsertBetween(temp, 4, 5);
+    assert(*a + 5 == list1.GetLen());
+    //конструктор копирования
+    List list2 = List(list1);
+    assert(compare(list1, list2));
+    *a = list2.GetLen();
+    //проверка частичного удаления
+    list2.Del(1);
+    assert(*a - 1 == list2.GetLen());
+    assert(!compare(list1, list2));
+    //полное удаление элементов в списке
+    list2.Destruction();
+    assert(list2.GetLen() == 0);
+    //запись и считывание из файла
+    list1.ToFile(filename);
+    list2.FromFile(filename);
+    assert(compare(list1, list2));
+    delete a;
+    list2.Destruction();
+    //Проверка сортировки и вывода списка
+    assert(!list1.IfSorted());
+    list1.Sort();
+    printList(list1, 1);
+    cout<<endl;
+    printList(list1, 0);
+    assert(list1.IfSorted());
+    //Проверка вставки с сортировкой
+    temp.setInfo(correctName6, correctNum8, correctNum2);
+    list1.InsertWSort(temp);
+    assert(list1.IfSorted());
 #endif
 }
