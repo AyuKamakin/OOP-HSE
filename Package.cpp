@@ -5,15 +5,15 @@
 
 #define DEBUG 0
 #define maxLen 10
-#define maxFloat 100000
-#define minFloat 1
+#define maxInt 2147483646
+#define minInt 1
 using namespace std;
 Package::Package() {
     price=0;
     size=0;
 }
 bool check(const int32_t& n){
-    if(n>=minFloat&n<maxFloat) return true;
+    if(n>=minInt&&n<maxInt) return true;
     else return false;
 }
 Package::Package(const char *newName, const int32_t &newSize, const int32_t &newPrice) {
@@ -88,7 +88,7 @@ const float Package::getValue() const{
     if(size>0)return ((float)price/size);
     else return 0;
 }
-void Package::readFromF(const string filename){
+void Package::readFromF(const string& filename){
     ifstream file;
     file.open(filename);
     if(file.is_open()){
@@ -99,7 +99,7 @@ void Package::readFromF(const string filename){
     }
     return;
 }
-void Package::writeToF(const string filename)const{
+void Package::writeToF(const string& filename)const{
     ofstream file;
     file.open(filename);
     if(file.is_open()){
