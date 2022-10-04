@@ -4,6 +4,7 @@
 #include <fstream>
 #include "Package.h"
 #include "List.h"
+#include "Node.h"
 
 using namespace std;
 
@@ -30,61 +31,62 @@ using namespace std;
 #define filename "toFrom.txt"
 
 void printList(List list, const bool how) {
-    node *start;
+    if(list.GetLen()==0) return;
+    Node *start;
     if (how) start = list.Head();
     else start = list.Tail();
-    if (start->prev == 0) {
+    if (start->prev() == 0) {
         if (start != 0) {
-            node *temp = start;
+            Node *temp = start;
             int i = 1;
-            while (temp->next != 0) {
-                cout << "num " << i << ": " << temp->data.getName() << ", size " <<
-                     temp->data.getSize() << ", price " << temp->data.getPrice() << ", value " << temp->data.getValue()
-                     << endl;
-                temp = temp->next;
+            while (temp->ifNext()) {
+                cout << "num " << i << ": " ;
+                temp->getPack().Print();
+                cout<<", value " << temp->getPack().getValue()<< endl;
+                temp = temp->next();
                 i++;
             }
-            cout << "num " << i << ": " << temp->data.getName() << ", size " <<
-                 temp->data.getSize() << ", price " << temp->data.getPrice() << ", value " << temp->data.getValue()
-                 << endl;
+            cout << "num " << i << ": ";
+            temp->getPack().Print();
+            cout<<", value " << temp->getPack().getValue()<< endl;
         }
     } else {
         if (start != 0) {
-            node *temp = start;
+            Node *temp = start;
             int i = list.GetLen();
-            while (temp->prev != 0) {
-                cout << "num " << i << ": " << temp->data.getName() << ", size " <<
-                     temp->data.getSize() << ", price " << temp->data.getPrice() << ", value " << temp->data.getValue()
-                     << endl;
-                temp = temp->prev;
+            while (temp->ifPrev()) {
+                cout << "num " << i << ": " ;
+                temp->getPack().Print();
+                cout<<", value " << temp->getPack().getValue()<< endl;
+                temp = temp->prev();
                 i--;
             }
-            cout << "num " << i << ": " << temp->data.getName() << ", size " <<
-                 temp->data.getSize() << ", price " << temp->data.getPrice() << ", value " << temp->data.getValue()
-                 << endl;
+            cout << "num " << i << ": " ;
+            temp->getPack().Print();
+            cout<<", value " << temp->getPack().getValue()<< endl;
         }
     }
 }
 
-bool compare(const List list1, const List list2) {
-    node *firstOne = list1.Head();
-    node *firstSec = list2.Head();
-    if (firstOne != 0 && firstSec != 0 && firstOne->prev == 0 && firstSec->prev == 0 &&
+bool compare(const List& list1, const List& list2) {
+    Node *firstOne = list1.Head();
+    Node *firstSec = list2.Head();
+    if (firstOne != 0 && firstSec != 0 && !firstOne->ifPrev() && !firstSec->ifPrev() &&
         list1.GetLen() == list2.GetLen()) {
-        node *temp = firstOne;
-        node *temp2 = firstSec;
-        while (temp->next != 0 && temp2->next != 0) {
-            assert(temp->data.getValue() == temp2->data.getValue());
-            assert(temp->data.getSize() == temp2->data.getSize());
-            assert(temp->data.getPrice() == temp2->data.getPrice());
-            assert(!strcmp(temp->data.getName(), temp2->data.getName()));
-            temp = temp->next;
-            temp2 = temp2->next;
+        Node *temp = firstOne;
+        Node *temp2 = firstSec;
+        while (temp->ifNext() != 0 && temp2->ifNext() != 0) {
+            assert(temp->getPack().getValue() == temp2->getPack().getValue());
+            assert(temp->getPack().getSize() == temp2->getPack().getSize());
+            assert(temp->getPack().getPrice() == temp2->getPack().getPrice());
+            assert(!strcmp(temp->getPack().getName(), temp2->getPack().getName()));
+            temp = temp->next();
+            temp2 = temp2->next();
         }
-        assert(temp->data.getValue() == temp2->data.getValue());
-        assert(temp->data.getSize() == temp2->data.getSize());
-        assert(temp->data.getPrice() == temp2->data.getPrice());
-        assert(!strcmp(temp->data.getName(), temp2->data.getName()));
+        assert(temp->getPack().getValue() == temp2->getPack().getValue());
+        assert(temp->getPack().getSize() == temp2->getPack().getSize());
+        assert(temp->getPack().getPrice() == temp2->getPack().getPrice());
+        assert(!strcmp(temp->getPack().getName(), temp2->getPack().getName()));
         return 1;
     } else return 0;
 }
@@ -127,22 +129,22 @@ int main() {
     Package temp = Package(correctName1, correctNum1, correctNum4);
     //Проверка методов вставки
     list1.InsertWSort(temp);
-    Package test=list1.Tail()->data;
+    Package test=list1.Tail()->getPack();
     temp.setInfo(correctName2, correctNum4, correctNum3);
     list1.Insert(temp);
-    assert(list1.Tail()->data.getValue()!=test.getValue());
+    assert(list1.Tail()->getPack().getValue()!=test.getValue());
     temp.setInfo(correctName3, 1000000, 1);
-    test=list1.GetElem(list1.GetLen()-1)->data;
+    test=list1.GetElem(list1.GetLen()-1)->getPack();
     list1.InsertBetween(temp, list1.GetLen() - 1, list1.GetLen());
-    assert(list1.GetElem(list1.GetLen()-1)->data.getValue()!=test.getValue());
+    assert(list1.GetElem(list1.GetLen()-1)->getPack().getValue()!=test.getValue());
     temp.setInfo(correctName4, correctNum7, correctNum8);
-    test=list1.Head()->data;
+    test=list1.Head()->getPack();
     list1.InsertBetween(temp,0,1);
-    assert(list1.Head()->data.getValue()!=test.getValue());
+    assert(list1.Head()->getPack().getValue()!=test.getValue());
     temp.setInfo(correctName5, correctNum5, correctNum6);
-    test=list1.GetElem(3)->data;
+    test=list1.GetElem(3)->getPack();
     list1.InsertBetween(temp, 2, 3);
-    assert(list1.GetElem(3)->data.getValue()!=test.getValue());
+    assert(list1.GetElem(3)->getPack().getValue()!=test.getValue());
     temp.setInfo(incorrectName, incorrectNum1, incorrectNum2);
     //этой вставки не должно произойти, неверное имя у temp
     list1.InsertBetween(temp, 4, 5);
