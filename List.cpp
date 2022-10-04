@@ -16,11 +16,14 @@ List::List() {
 List::List(const List &L) {
     first = last = NULL;
     len = 0;
-    node *temp = L.first;
-    while (temp != 0) {
-        Insert(temp->data);
-        temp = temp->next;
-    }
+    if (L.len == 0) return;
+        Node *temp = L.first;
+        while (temp->ifNext()) {
+            Insert(temp->getPack());
+            temp = temp->next();
+        }
+        Insert(temp->getPack());
+
 }
 
 //деструктор
@@ -42,13 +45,15 @@ void List::FromFile(const string &filename) {
 }
 
 void List::ToFile(const string &filename) {
+    if(len==0) return;
     ofstream file;
     file.open(filename);
-    node *temp = first;
+    Node *temp = first;
     if (file.is_open()) {
         while (temp != 0) {
-            file << temp->data.getName() << " " << temp->data.getSize() << " " << temp->data.getPrice() << "\n";
-            temp = temp->next;
+            file << temp->getPack().getName() << " " << temp->getPack().getSize() << " " << temp->getPack().getPrice()
+                 << "\n";
+            temp = temp->next();
         }
     }
     file.close();
@@ -66,29 +71,30 @@ void List::Del(const int &pos) {
 
     } else {
         if (pos == 1) {
-            node *to = first->next;
-            to->prev = 0;
+            Node *to = first->next();
+            to->setPrevNull();
             delete first;
             first = to;
         } else if (pos == len) {
-            node *to = last->prev;
-            to->next = 0;
+            Node *to = last->prev();
+            to->setNextNull();
             delete last;
             last = to;
         } else {
-            node *toDelete = first;
+            Node *toDelete = first;
             for (int i = 1; i < pos; i++) {
-                toDelete = toDelete->next;
+                toDelete = toDelete->next();
             }
-            node *pred = toDelete->prev;
-            node *nex = toDelete->next;
+            Node *pred = toDelete->prev();
+            Node *nex = toDelete->next();
             delete toDelete;
-            pred->next = nex;
-            nex->prev = pred;
+            pred->setNext(nex);
+            nex->setPrev(pred);
         }
         len--;
     }
 }
+
 //вывод количества эл-тов, элементов или элемента
 const int &List::GetLen() const {
     return len;
@@ -102,159 +108,156 @@ void List::Print(const int &pos) const {
 #endif
         return;
     }
-    node *temp;
+    Node *temp;
     if (pos <= len / 2) {
         temp = first;
         for (int i = 1; i < pos; i++) {
-            temp = temp->next;
+            temp = temp->next();
         }
     } else {
         temp = last;
         for (int i = 1; i <= len - pos; i++) {
-            temp = temp->prev;
+            temp = temp->prev();
         }
     }
-    cout << "size " << temp->data.getSize() << ", price " << temp->data.getPrice() << ", value "
-         << temp->data.getValue() << endl;
+    cout << "size " << temp->getPack().getSize() << ", price " << temp->getPack().getPrice() << ", value "
+         << temp->getPack().getValue() << endl;
 
 }
 
 //Добавление элемента
 void List::Insert(const Package &n) {
-    if(!strcmp(n.getName(),"")) return;
-    node *temp = new node;
-    temp->next = 0;
-    temp->data = n;
+    if (!strcmp(n.getName(), "")) return;
+    Node *temp = new Node(n);
+    temp->setNextNull();
     if (len == 0) {
         first = temp;
-        temp->prev = 0;
+        temp->setPrevNull();
     } else {
-        temp->prev = last;
-        last->next = temp;
+        temp->setPrev(last);
+        last->setNext(temp);
     }
-    last=temp;
+    last = temp;
     len++;
 }
 
 void List::InsertBetween(const Package &n, const int &pos1, const int &pos2) {
     if (pos1 == pos2 || pos2 - pos1 > 1 || pos1 < 0
-            || pos2 < 1 || pos1 > len - 1 || pos2 > len || !strcmp(n.getName(),"")) return;
-    node *temp = new node;
-    temp->data = n;
+        || pos2 < 1 || pos1 > len - 1 || pos2 > len || !strcmp(n.getName(), ""))
+        return;
+    Node *temp = new Node(n);
     if (pos1 == 0) {
-        first->prev = temp;
-        temp->next = first;
-        temp->prev = 0;
+        first->setPrev(temp);
+        temp->setNext(first);
+        temp->setPrevNull();
         first = temp;
-    }
-    else {
-        temp->prev=GetElem(pos1);
-        temp->next=GetElem(pos1)->next;
-        GetElem(pos1)->next->prev=temp;
-        GetElem(pos1)->next=temp;
+    } else {
+        temp->setPrev(GetElem(pos1));
+        temp->setNext(GetElem(pos1)->next());
+        GetElem(pos1)->next()->setPrev(temp);
+        GetElem(pos1)->setNext(temp);
     }
     len++;
 }
 
 void List::InsertWSort(const Package &n) {
-    if(!strcmp(n.getName(),"")) return;
-    node *temp = new node;
-    temp->data = n;
+    if (!strcmp(n.getName(), "")) return;
+    Node *temp = new Node(n);
     if (len == 0) {
         first = last = temp;
-        temp->next = 0;
-        temp->prev = 0;
+        temp->setNextNull();
+        temp->setPrevNull();
     } else if (len == 1) {
-        if (temp->data.getValue() > first->data.getValue()) {
-            first->next = temp;
-            temp->prev = first;
-            temp->next = 0;
+        if (temp->getPack().getValue() > first->getPack().getValue()) {
+            first->setNext(temp);
+            temp->setPrev(first);
+            temp->setNextNull();
             last = temp;
         } else {
             last = first;
             first = temp;
-            temp->next = last;
-            temp->prev = 0;
-            last->next = 0;
-            last->prev = temp;
+            temp->setNext(last);
+            temp->setPrevNull();
+            last->setNextNull();
+            last->setPrev(temp);
         }
     } else {
-        if (temp->data.getValue() <= first->data.getValue()) {
-            temp->next = first;
-            temp->prev = 0;
+        if (temp->getPack().getValue() <= first->getPack().getValue()) {
+            temp->setNext(first);
+            temp->setPrevNull();
             first = temp;
-        } else if (temp->data.getValue() >= last->data.getValue()) {
-            last->next = temp;
-            temp->next = 0;
-            temp->prev = last;
+        } else if (temp->getPack().getValue() >= last->getPack().getValue()) {
+            last->setNext(temp);
+            temp->setNextNull();
+            temp->setPrev(last);
             last = temp;
         } else {
-            node *curr = first;
-            node *ncurr = curr->next;
-            while (!(curr->data.getValue() <= temp->data.getValue() &&
-                     ncurr->data.getValue() >= temp->data.getValue())) {
+            Node *curr = first;
+            Node *ncurr = curr->next();
+            while (!(curr->getPack().getValue() <= temp->getPack().getValue() &&
+                     ncurr->getPack().getValue() >= temp->getPack().getValue())) {
                 curr = ncurr;
-                ncurr = curr->next;
+                ncurr = curr->next();
             }
-            temp->prev = curr;
-            temp->next = ncurr;
-            curr->next = temp;
-            ncurr->prev = temp;
+            temp->setPrev(curr);
+            temp->setNext(ncurr);
+            curr->setNext(temp);
+            ncurr->setPrev(temp);
         }
     }
     len++;
 }
 
 //получение конкретного элемента
-node *List::GetElem(const int &pos) const {
-    node *curr = first;
+Node *List::GetElem(const int &pos) const {
     if (pos < 1 || pos > len) return 0;
+    Node *curr = first;
     int i = 1;
     while (i < pos && curr != 0) {
-        curr = curr->next;
+        curr = curr->next();
         i++;
     }
     if (curr == 0) return 0;
     else return curr;
 }
 
-node *List::Head() const {
+Node *List::Head() const {
     return first;
 }
 
-node *List::Tail() const {
+Node *List::Tail() const {
     return last;
 }
 
 bool List::IfSorted() const {
-    node *temp = first;
-    while (temp->next != 0) {
-        if (temp->next->data.getValue() < temp->data.getValue()) return 0;
-        temp = temp->next;
+    Node *temp = first;
+    while (temp->ifNext()) {
+        if (temp->next()->getPack().getValue() < temp->getPack().getValue()) return 0;
+        temp = temp->next();
     }
     return 1;
 }
 
 void List::Sort() const {
-    node *curr = first;
-    node *ncurr = first->next;
-    Package temp = Package(ncurr->data.getName(), ncurr->data.getSize(), ncurr->data.getPrice());
-    ncurr->data.setInfo(curr->data.getName(), curr->data.getSize(), curr->data.getPrice());
-    curr->data.setInfo(temp.getName(), temp.getSize(), temp.getPrice());
+    Node *curr = first;
+    Node *ncurr = first->next();
+    Package temp = Package(ncurr->getPack());
+    ncurr->setPack(curr->getPack());
+    curr->setPack(temp);
     curr = ncurr;
-    ncurr = ncurr->next;
+    ncurr = ncurr->next();
     while (!IfSorted()) {
-        if (ncurr->data.getValue() < curr->data.getValue()) {
-            temp.setInfo(ncurr->data.getName(), ncurr->data.getSize(), ncurr->data.getPrice());
-            ncurr->data.setInfo(curr->data.getName(), curr->data.getSize(), curr->data.getPrice());
-            curr->data.setInfo(temp.getName(), temp.getSize(), temp.getPrice());
+        if (ncurr->getPack().getValue() < curr->getPack().getValue()) {
+            temp = ncurr->getPack();
+            ncurr->setPack(curr->getPack());
+            curr->setPack(temp);
         }
-        if (ncurr->next != 0) {
+        if (ncurr->ifNext()) {
             curr = ncurr;
-            ncurr = ncurr->next;
+            ncurr = ncurr->next();
         } else {
             curr = first;
-            ncurr = first->next;
+            ncurr = first->next();
         }
     }
 }
@@ -269,4 +272,3 @@ void GetFromFile(const string &s) {
     while (file.is_open()) file >> b >> c >> a;
     file.close();
 }
-
