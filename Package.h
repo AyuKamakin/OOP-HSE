@@ -3,9 +3,12 @@
 using namespace std;
 class Package
 {
+    friend class Node;
+    friend class List;
 protected:
     int32_t price;
     int32_t size;
+    float value=0;
     char *name = nullptr;
 public:
     //конструкторы по умолчанию
@@ -25,9 +28,12 @@ public:
     const char* getName() const;
     const int32_t& getSize() const;
     const int32_t& getPrice() const;
-    const float getValue() const;
-    void readFromF(const string& filename);
-    void writeToF(const string& filename) const;
+    const float& getValue() const;
+    void innerSetValue();
+    void Print() const{
+        cout<<" name : "<<name<<"; size: "<<size<<"; price : "<<price<<" ";
+    };
 };
+
 
 #endif //UNTITLED_PACKAGE_H
