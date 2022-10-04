@@ -100,3 +100,6 @@ void Package::innerSetValue() {
     else value=(float)price/(float)size;
 }
 
+void Package::Print() const {
+    cout<<" name : "<<name<<"; size: "<<size<<"; price : "<<price<<" ";
+}
