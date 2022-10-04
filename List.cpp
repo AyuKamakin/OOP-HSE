@@ -17,12 +17,12 @@ List::List(const List &L) {
     first = last = NULL;
     len = 0;
     if (L.len == 0) return;
-        Node *temp = L.first;
-        while (temp->ifNext()) {
-            Insert(temp->getPack());
-            temp = temp->next();
-        }
+    Node *temp = L.first;
+    while (temp->ifNext()) {
         Insert(temp->getPack());
+        temp = temp->next();
+    }
+    Insert(temp->getPack());
 
 }
 
@@ -209,7 +209,7 @@ void List::InsertWSort(const Package &n) {
 }
 
 //получение конкретного элемента
-Node *List::GetElem(const int &pos) const {
+List::Node *List::GetElem(const int &pos) const {
     if (pos < 1 || pos > len) return 0;
     Node *curr = first;
     int i = 1;
@@ -221,11 +221,11 @@ Node *List::GetElem(const int &pos) const {
     else return curr;
 }
 
-Node *List::Head() const {
+List::Node *List::Head() const {
     return first;
 }
 
-Node *List::Tail() const {
+List::Node *List::Tail() const {
     return last;
 }
 
@@ -271,4 +271,73 @@ void GetFromFile(const string &s) {
     float c;
     while (file.is_open()) file >> b >> c >> a;
     file.close();
+}
+
+List::Node::Node() {
+    innext= 0;
+    inprev= 0;
+}
+
+List::Node::Node(const Package& temp) {
+    innext= nullptr;
+    inprev= nullptr;
+    data=temp;
+}
+
+List::Node::Node(const Package &temp, Node *next, Node *prev) {
+    innext= next;
+    inprev= prev;
+    data=temp;
+}
+
+List::Node::Node(Node *next, Node *prev) {
+    innext= next;
+    inprev= prev;
+    data=NULL;
+}
+
+List::Node *List::Node::next() const {
+    return innext;
+}
+
+List::Node* List::Node::prev() const {
+    return inprev;
+}
+
+List::Node::~Node() {
+
+}
+
+const Package& List::Node::getPack() {
+    return data;
+}
+
+const bool List::Node::ifPrev() {
+    if(inprev!=0) return 1;
+    else return 0;
+}
+
+const bool List::Node::ifNext() {
+    if(innext!=0) return 1;
+    else return 0;
+}
+
+void List::Node::setNext(Node *n) {
+    innext=n;
+}
+
+void List::Node::setPrev(Node *n) {
+    inprev=n;
+}
+
+void List::Node::setNextNull() {
+    innext= 0;
+}
+
+void List::Node::setPrevNull() {
+    inprev= 0;
+}
+
+void List::Node::setPack(const Package &n) {
+    data=n;
 }
