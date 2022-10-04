@@ -3,13 +3,11 @@
 #include <cassert>
 #include <fstream>
 #include "Package.h"
-#include "List.h"
-#include "Node.h"
 
 using namespace std;
 
 #define DEBUG 2
-#define incorrectNum1 1000000000000
+#define incorrectNum1 1000000000
 #define incorrectNum2 -100
 #define correctNum1 10
 #define correctNum2 99
@@ -28,16 +26,16 @@ using namespace std;
 #define correctName5 "orange"
 #define correctName6 "small"
 #define incorrectName "aaaaaaaaaaaar"
-#define filename "toFrom.txt"
 
+#include "List.h"
 void printList(List list, const bool how) {
     if(list.GetLen()==0) return;
-    Node *start;
+    List::Node *start;
     if (how) start = list.Head();
     else start = list.Tail();
     if (start->prev() == 0) {
         if (start != 0) {
-            Node *temp = start;
+            List::Node *temp = start;
             int i = 1;
             while (temp->ifNext()) {
                 cout << "num " << i << ": " ;
@@ -52,7 +50,7 @@ void printList(List list, const bool how) {
         }
     } else {
         if (start != 0) {
-            Node *temp = start;
+            List::Node *temp = start;
             int i = list.GetLen();
             while (temp->ifPrev()) {
                 cout << "num " << i << ": " ;
@@ -69,12 +67,12 @@ void printList(List list, const bool how) {
 }
 
 bool compare(const List& list1, const List& list2) {
-    Node *firstOne = list1.Head();
-    Node *firstSec = list2.Head();
+    List::Node *firstOne = list1.Head();
+    List::Node *firstSec = list2.Head();
     if (firstOne != 0 && firstSec != 0 && !firstOne->ifPrev() && !firstSec->ifPrev() &&
         list1.GetLen() == list2.GetLen()) {
-        Node *temp = firstOne;
-        Node *temp2 = firstSec;
+        List::Node *temp = firstOne;
+        List::Node *temp2 = firstSec;
         while (temp->ifNext() != 0 && temp2->ifNext() != 0) {
             assert(temp->getPack().getValue() == temp2->getPack().getValue());
             assert(temp->getPack().getSize() == temp2->getPack().getSize());
@@ -161,8 +159,8 @@ int main() {
     list2.Destruction();
     assert(list2.GetLen() == 0);
     //запись и считывание из файла
-    list1.ToFile(filename);
-    list2.FromFile(filename);
+    list1.ToFile("toFrom.txt");
+    list2.FromFile("toFrom.txt");
     assert(compare(list1, list2));
     delete a;
     list2.Destruction();
