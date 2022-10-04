@@ -30,9 +30,7 @@ public:
     const int32_t& getPrice() const;
     const float& getValue() const;
     void innerSetValue();
-    void Print() const{
-        cout<<" name : "<<name<<"; size: "<<size<<"; price : "<<price<<" ";
-    };
+    void Print() const;;
 };
 
 
