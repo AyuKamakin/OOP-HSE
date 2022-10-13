@@ -29,10 +29,10 @@ using namespace std;
 
 #include "List.h"
 void printList(List list, const bool how) {
-    if(list.GetLen()==0) return;
+    if(list.getLen()==0) return;
     List::Node *start;
-    if (how) start = list.Head();
-    else start = list.Tail();
+    if (how) start = list.head();
+    else start = list.tail();
     if (start->prev() == 0) {
         if (start != 0) {
             List::Node *temp = start;
@@ -51,7 +51,7 @@ void printList(List list, const bool how) {
     } else {
         if (start != 0) {
             List::Node *temp = start;
-            int i = list.GetLen();
+            int i = list.getLen();
             while (temp->ifPrev()) {
                 cout << "num " << i << ": " ;
                 temp->getPack().Print();
@@ -67,10 +67,10 @@ void printList(List list, const bool how) {
 }
 
 bool compare(const List& list1, const List& list2) {
-    List::Node *firstOne = list1.Head();
-    List::Node *firstSec = list2.Head();
+    List::Node *firstOne = list1.head();
+    List::Node *firstSec = list2.head();
     if (firstOne != 0 && firstSec != 0 && !firstOne->ifPrev() && !firstSec->ifPrev() &&
-        list1.GetLen() == list2.GetLen()) {
+        list1.getLen() == list2.getLen()) {
         List::Node *temp = firstOne;
         List::Node *temp2 = firstSec;
         while (temp->ifNext() != 0 && temp2->ifNext() != 0) {
@@ -123,57 +123,57 @@ int main() {
     //Конструктор по умолчанию
     List list1 = List();
     int *a = new int;
-    *a = list1.GetLen();
+    *a = list1.getLen();
     Package temp = Package(correctName1, correctNum1, correctNum4);
     //Проверка методов вставки
-    list1.InsertWSort(temp);
-    Package test=list1.Tail()->getPack();
+    list1.insertWSort(temp);
+    Package test= (list1.tail()->getPack());
     temp.setInfo(correctName2, correctNum4, correctNum3);
-    list1.Insert(temp);
-    assert(list1.Tail()->getPack().getValue()!=test.getValue());
+    list1.add(temp);
+    assert(list1.tail()->getPack().getValue() != test.getValue());
     temp.setInfo(correctName3, 1000000, 1);
-    test=list1.GetElem(list1.GetLen()-1)->getPack();
-    list1.InsertBetween(temp, list1.GetLen() - 1, list1.GetLen());
-    assert(list1.GetElem(list1.GetLen()-1)->getPack().getValue()!=test.getValue());
+    test= list1.getElem(list1.getLen() - 1)->getPack();
+    list1.insertBetween(temp, list1.getLen() - 1, list1.getLen());
+    assert(list1.getElem(list1.getLen() - 1)->getPack().getValue() != test.getValue());
     temp.setInfo(correctName4, correctNum7, correctNum8);
-    test=list1.Head()->getPack();
-    list1.InsertBetween(temp,0,1);
-    assert(list1.Head()->getPack().getValue()!=test.getValue());
+    test= (*list1.head()).getPack();
+    list1.insertBetween(temp, 0, 1);
+    assert((*list1.head()).getPack().getValue() != test.getValue());
     temp.setInfo(correctName5, correctNum5, correctNum6);
-    test=list1.GetElem(3)->getPack();
-    list1.InsertBetween(temp, 2, 3);
-    assert(list1.GetElem(3)->getPack().getValue()!=test.getValue());
+    test= list1.getElem(3)->getPack();
+    list1.insertBetween(temp, 2, 3);
+    assert(list1.getElem(3)->getPack().getValue() != test.getValue());
     temp.setInfo(incorrectName, incorrectNum1, incorrectNum2);
     //этой вставки не должно произойти, неверное имя у temp
-    list1.InsertBetween(temp, 4, 5);
-    assert(*a + 5 == list1.GetLen());
+    list1.insertBetween(temp, 4, 5);
+    assert(*a + 5 == list1.getLen());
     //конструктор копирования
     List list2 = List(list1);
     assert(compare(list1, list2));
-    *a = list2.GetLen();
+    *a = list2.getLen();
     //проверка частичного удаления
-    list2.Del(1);
-    assert(*a - 1 == list2.GetLen());
+    list2.del(1);
+    assert(*a - 1 == list2.getLen());
     assert(!compare(list1, list2));
     //полное удаление элементов в списке
-    list2.Destruction();
-    assert(list2.GetLen() == 0);
+    list2.destruction();
+    assert(list2.getLen() == 0);
     //запись и считывание из файла
-    list1.ToFile("toFrom.txt");
-    list2.FromFile("toFrom.txt");
+    list1.toFile("toFrom.txt");
+    list2.fromFile("toFrom.txt");
     assert(compare(list1, list2));
     delete a;
-    list2.Destruction();
+    list2.destruction();
     //Проверка сортировки и вывода списка
-    assert(!list1.IfSorted());
-    list1.Sort();
+    assert(!list1.ifSorted());
+    list1.sort();
     printList(list1, 1);
     cout<<endl;
     printList(list1, 0);
-    assert(list1.IfSorted());
+    assert(list1.ifSorted());
     //Проверка вставки с сортировкой
     temp.setInfo(correctName6, correctNum8, correctNum2);
-    list1.InsertWSort(temp);
-    assert(list1.IfSorted());
+    list1.insertWSort(temp);
+    assert(list1.ifSorted());
 #endif
 }
