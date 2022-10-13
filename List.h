@@ -5,13 +5,15 @@ using namespace std;
 
 class List
 {
-public: class Node {
+public:
+    friend class Iterator;
+    class Node {
         friend class Package;
-    protected:
+        friend class Iterator;
+    public:
         Node* innext= nullptr;
         Node* inprev= nullptr;
         Package data;
-    public:
         Node();
         Node(const Package& temp);
         Node(const Package& temp, Node* next, Node* prev);
@@ -25,35 +27,65 @@ public: class Node {
         void setPrevNull();;
         void setPack(const Package& n);
         const Package& getPack();
-        const bool ifNext();
-        const bool ifPrev();
+        const bool ifNext() const;
+        const bool ifPrev() const;
     };
 protected:
     Node* first;
     Node* last;
     int len;
+
+     class Iterator {
+        Node *curr;
+    public:
+        Iterator(Node *fir) {
+            this->curr = fir;
+        }
+        Iterator(){
+            curr= nullptr;
+        }
+//перегрузки операторов
+        Node *operator*();
+
+        Node &operator++();
+
+        Node &operator--(int);
+
+         const Package& getPack();;
+         void setPack(const Package &n);
+         const bool ifNext();;
+         const bool ifPrev();;
+         void setNext(Iterator n);;
+         void setPrev(Iterator n);;
+         void setNextNull();;
+         void set(Node* n);
+         void setPrevNull();;
+         Node * next() const;
+         Node* prev() const;
+     };
+
 public:
     List();;
     List(const List& L);;
     ~List();;
-    void Del(const int& pos);;
-    void Destruction();;
+    void del(const int& pos);;
+    void destruction();;
 
-    const int& GetLen() const;;
-    Node* Head() const;;
-    Node* Tail() const;;
-    Node* GetElem(const int& pos) const;;
+    const int& getLen() const;;
+    Node* head() const;;
+    Node* tail() const;;;
+    Node* getElem(const int& pos) const;;
 
-    void Insert(const Package& n);;
-    void InsertBetween(const Package& n, const int& pos1, const int& pos2);;
-    void InsertWSort(const Package& n);;
+    void add(const Package& n);;
+    void insertBetween(const Package& n, const int& pos1, const int& pos2);;
+    void insertWSort(const Package& n);;
 
-    void FromFile(const string& filename);;
-    void ToFile(const string& filename);;
+    void fromFile(const string& filename);;
+    void toFile(const string& filename);;
 
 
     void Print(const int& pos) const;;
 
-    void Sort() const;;
-    bool IfSorted() const;;
+    void sort() const;;
+    bool ifSorted() const;;
 };
