@@ -19,19 +19,19 @@ List::List(const List &L) {
     if (L.len == 0) return;
     Node *temp = L.first;
     while (temp->ifNext()) {
-        Insert(temp->getPack());
+        add(temp->getPack());
         temp = temp->next();
     }
-    Insert(temp->getPack());
+    add(temp->getPack());
 
 }
 
 //деструктор
 List::~List() {
-    Destruction();
+    destruction();
 }
 
-void List::FromFile(const string &filename) {
+void List::fromFile(const string &filename) {
     ifstream file;
     file.open(filename);
     string name;
@@ -39,12 +39,12 @@ void List::FromFile(const string &filename) {
     Package temp;
     while (file >> name >> size >> price) {
         temp.setInfo(name.c_str(), size, price);
-        Insert(temp);
+        add(temp);
     }
     file.close();
 }
 
-void List::ToFile(const string &filename) {
+void List::toFile(const string &filename) {
     if(len==0) return;
     ofstream file;
     file.open(filename);
@@ -59,11 +59,11 @@ void List::ToFile(const string &filename) {
     file.close();
 }
 
-void List::Destruction() {
-    while (len != 0) Del(1);
+void List::destruction() {
+    while (len != 0) del(1);
 }
 
-void List::Del(const int &pos) {
+void List::del(const int &pos) {
     if (pos < 1 || pos > len) return;
     if (len == 1) {
         delete first;
@@ -96,7 +96,7 @@ void List::Del(const int &pos) {
 }
 
 //вывод количества эл-тов, элементов или элемента
-const int &List::GetLen() const {
+const int &List::getLen() const {
     return len;
 }
 
@@ -126,7 +126,7 @@ void List::Print(const int &pos) const {
 }
 
 //Добавление элемента
-void List::Insert(const Package &n) {
+void List::add(const Package &n) {
     if (!strcmp(n.getName(), "")) return;
     Node *temp = new Node(n);
     temp->setNextNull();
@@ -141,7 +141,7 @@ void List::Insert(const Package &n) {
     len++;
 }
 
-void List::InsertBetween(const Package &n, const int &pos1, const int &pos2) {
+void List::insertBetween(const Package &n, const int &pos1, const int &pos2) {
     if (pos1 == pos2 || pos2 - pos1 > 1 || pos1 < 0
         || pos2 < 1 || pos1 > len - 1 || pos2 > len || !strcmp(n.getName(), ""))
         return;
@@ -152,15 +152,15 @@ void List::InsertBetween(const Package &n, const int &pos1, const int &pos2) {
         temp->setPrevNull();
         first = temp;
     } else {
-        temp->setPrev(GetElem(pos1));
-        temp->setNext(GetElem(pos1)->next());
-        GetElem(pos1)->next()->setPrev(temp);
-        GetElem(pos1)->setNext(temp);
+        temp->setPrev(getElem(pos1));
+        temp->setNext(getElem(pos1)->next());
+        getElem(pos1)->next()->setPrev(temp);
+        getElem(pos1)->setNext(temp);
     }
     len++;
 }
 
-void List::InsertWSort(const Package &n) {
+void List::insertWSort(const Package &n) {
     if (!strcmp(n.getName(), "")) return;
     Node *temp = new Node(n);
     if (len == 0) {
@@ -209,7 +209,7 @@ void List::InsertWSort(const Package &n) {
 }
 
 //получение конкретного элемента
-List::Node *List::GetElem(const int &pos) const {
+List::Node *List::getElem(const int &pos) const {
     if (pos < 1 || pos > len) return 0;
     Node *curr = first;
     int i = 1;
@@ -221,15 +221,15 @@ List::Node *List::GetElem(const int &pos) const {
     else return curr;
 }
 
-List::Node *List::Head() const {
+List::Node *List::head() const {
     return first;
 }
 
-List::Node *List::Tail() const {
+List::Node *List::tail() const {
     return last;
 }
 
-bool List::IfSorted() const {
+bool List::ifSorted() const {
     Node *temp = first;
     while (temp->ifNext()) {
         if (temp->next()->getPack().getValue() < temp->getPack().getValue()) return 0;
@@ -238,7 +238,7 @@ bool List::IfSorted() const {
     return 1;
 }
 
-void List::Sort() const {
+void List::sort() const {
     Node *curr = first;
     Node *ncurr = first->next();
     Package temp = Package(ncurr->getPack());
@@ -246,7 +246,7 @@ void List::Sort() const {
     curr->setPack(temp);
     curr = ncurr;
     ncurr = ncurr->next();
-    while (!IfSorted()) {
+    while (!ifSorted()) {
         if (ncurr->getPack().getValue() < curr->getPack().getValue()) {
             temp = ncurr->getPack();
             ncurr->setPack(curr->getPack());
@@ -312,12 +312,12 @@ const Package& List::Node::getPack() {
     return data;
 }
 
-const bool List::Node::ifPrev() {
+const bool List::Node::ifPrev() const {
     if(inprev!=0) return 1;
     else return 0;
 }
 
-const bool List::Node::ifNext() {
+const bool List::Node::ifNext() const {
     if(innext!=0) return 1;
     else return 0;
 }
@@ -340,4 +340,63 @@ void List::Node::setPrevNull() {
 
 void List::Node::setPack(const Package &n) {
     data=n;
+}
+//функции класса Iterator
+
+List::Node &List::Iterator::operator--(int) {
+    this->curr = this->curr->inprev;
+    return *this->curr;
+}
+
+List::Node &List::Iterator::operator++() {
+    this->curr = this->curr->innext;
+    return *this->curr;
+}
+
+List::Node *List::Iterator::operator*() { return curr; }
+
+const Package &List::Iterator::getPack() {
+    return curr->data;
+}
+
+List::Node *List::Iterator::next() const {
+    return curr->innext;
+}
+
+List::Node *List::Iterator::prev() const {
+    return curr->inprev;
+}
+
+void List::Iterator::setPrevNull() {
+    curr->inprev= 0;
+}
+
+void List::Iterator::setNextNull() {
+    curr->innext= 0;
+}
+
+void List::Iterator::setPrev(List::Iterator n) {
+    curr->inprev=n.curr;
+}
+
+void List::Iterator::setNext(List::Iterator n) {
+    curr->innext=n.curr;
+}
+
+const bool List::Iterator::ifPrev() {
+    if(curr->inprev!=0) return 1;
+    else return 0;
+}
+
+const bool List::Iterator::ifNext() {
+    if(curr->innext!=0) return 1;
+    else return 0;
+}
+
+void List::Iterator::setPack(const Package &n) {
+    curr->data=n;
+}
+
+void List::Iterator::set(List::Node *n) {
+    curr=n;
 }
