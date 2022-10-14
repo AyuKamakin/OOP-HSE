@@ -207,7 +207,6 @@ void List::insertWSort(const Package &n) {
     }
     len++;
 }
-
 //получение конкретного элемента
 List::Node *List::getElem(const int &pos) const {
     if (pos < 1 || pos > len) return 0;
@@ -260,17 +259,6 @@ void List::sort() const {
             ncurr = first->next();
         }
     }
-}
-
-void GetFromFile(const string &s) {
-    ifstream file;
-    file.open("toFrom");
-    Package temp = Package();
-    char *a;
-    float b;
-    float c;
-    while (file.is_open()) file >> b >> c >> a;
-    file.close();
 }
 
 List::Node::Node() {
@@ -344,57 +332,47 @@ void List::Node::setPack(const Package &n) {
 //функции класса Iterator
 
 List::Node &List::Iterator::operator--(int) {
-    this->curr = this->curr->inprev;
+    this->curr = this->curr->prev();
     return *this->curr;
 }
 
 List::Node &List::Iterator::operator++() {
-    this->curr = this->curr->innext;
+    this->curr = this->curr->next();
     return *this->curr;
 }
 
 List::Node *List::Iterator::operator*() { return curr; }
 
 const Package &List::Iterator::getPack() {
-    return curr->data;
-}
-
-List::Node *List::Iterator::next() const {
-    return curr->innext;
-}
-
-List::Node *List::Iterator::prev() const {
-    return curr->inprev;
+    return curr->getPack();
 }
 
 void List::Iterator::setPrevNull() {
-    curr->inprev= 0;
+    curr->setNextNull();
 }
 
 void List::Iterator::setNextNull() {
-    curr->innext= 0;
+    curr->setNextNull();
 }
 
 void List::Iterator::setPrev(List::Iterator n) {
-    curr->inprev=n.curr;
+    curr->setPrev(n.curr);
 }
 
 void List::Iterator::setNext(List::Iterator n) {
-    curr->innext=n.curr;
+    curr->setNext(n.curr);
 }
 
 const bool List::Iterator::ifPrev() {
-    if(curr->inprev!=0) return 1;
-    else return 0;
+    return curr->ifPrev();
 }
 
 const bool List::Iterator::ifNext() {
-    if(curr->innext!=0) return 1;
-    else return 0;
+    return curr->ifNext();
 }
 
 void List::Iterator::setPack(const Package &n) {
-    curr->data=n;
+    curr->setPack(n);
 }
 
 void List::Iterator::set(List::Node *n) {
