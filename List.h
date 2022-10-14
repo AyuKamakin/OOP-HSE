@@ -34,8 +34,8 @@ protected:
     Node* first;
     Node* last;
     int len;
-
-     class Iterator {
+public:
+    class Iterator {
         Node *curr;
     public:
         Iterator(Node *fir) {
@@ -51,18 +51,18 @@ protected:
 
         Node &operator--(int);
 
-         const Package& getPack();;
-         void setPack(const Package &n);
-         const bool ifNext();;
-         const bool ifPrev();;
-         void setNext(Iterator n);;
-         void setPrev(Iterator n);;
-         void setNextNull();;
-         void set(Node* n);
-         void setPrevNull();;
-         Node * next() const;
-         Node* prev() const;
-     };
+        const Package& getPack();;
+        void setPack(const Package &n);
+        const bool ifNext();;
+        const bool ifPrev();;
+        void setNext(Iterator n);;
+        void setPrev(Iterator n);;
+        void setNextNull();;
+        void set(Node* n);
+        void setPrevNull();;
+        Node * next() const;
+        Node* prev() const;
+    };
 
 public:
     List();;
