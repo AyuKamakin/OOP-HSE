@@ -26,65 +26,65 @@ using namespace std;
 #define correctName5 "orange"
 #define correctName6 "small"
 #define incorrectName "aaaaaaaaaaaar"
-
 #include "List.h"
 void printList(List list, const bool how) {
     if(list.getLen()==0) return;
-    List::Node *start;
+    List::Iterator start;
     if (how) start = list.head();
     else start = list.tail();
-    if (start->prev() == 0) {
-        if (start != 0) {
-            List::Node *temp = start;
+    if (!start.ifPrev()) {
+        if (*start) {
+            List::Iterator temp = start;
             int i = 1;
-            while (temp->ifNext()) {
+            while (temp.ifNext()) {
                 cout << "num " << i << ": " ;
-                temp->getPack().Print();
-                cout<<", value " << temp->getPack().getValue()<< endl;
-                temp = temp->next();
+                temp.getPack().Print();
+                cout<<", value " << temp.getPack().getValue()<< endl;
+                ++temp;
                 i++;
             }
             cout << "num " << i << ": ";
-            temp->getPack().Print();
-            cout<<", value " << temp->getPack().getValue()<< endl;
+            temp.getPack().Print();
+            cout<<", value " << temp.getPack().getValue()<< endl;
         }
-    } else {
-        if (start != 0) {
-            List::Node *temp = start;
+    }
+    else {
+        if (*start) {
+            List::Iterator temp = start;
             int i = list.getLen();
-            while (temp->ifPrev()) {
+            while (temp.ifPrev()) {
                 cout << "num " << i << ": " ;
-                temp->getPack().Print();
-                cout<<", value " << temp->getPack().getValue()<< endl;
-                temp = temp->prev();
+                temp.getPack().Print();
+                cout<<", value " << temp.getPack().getValue()<< endl;
+                temp--;
                 i--;
             }
             cout << "num " << i << ": " ;
-            temp->getPack().Print();
-            cout<<", value " << temp->getPack().getValue()<< endl;
+            temp.getPack().Print();
+            cout<<", value " << temp.getPack().getValue()<< endl;
         }
     }
 }
 
 bool compare(const List& list1, const List& list2) {
-    List::Node *firstOne = list1.head();
-    List::Node *firstSec = list2.head();
-    if (firstOne != 0 && firstSec != 0 && !firstOne->ifPrev() && !firstSec->ifPrev() &&
+    List::Iterator firstOne = list1.head();
+    List::Iterator firstSec = list2.head();
+    if (*firstOne != 0 && *firstSec != 0 && !firstOne.ifPrev() && !firstSec.ifPrev() &&
         list1.getLen() == list2.getLen()) {
-        List::Node *temp = firstOne;
-        List::Node *temp2 = firstSec;
-        while (temp->ifNext() != 0 && temp2->ifNext() != 0) {
-            assert(temp->getPack().getValue() == temp2->getPack().getValue());
-            assert(temp->getPack().getSize() == temp2->getPack().getSize());
-            assert(temp->getPack().getPrice() == temp2->getPack().getPrice());
-            assert(!strcmp(temp->getPack().getName(), temp2->getPack().getName()));
-            temp = temp->next();
-            temp2 = temp2->next();
+        List::Iterator temp = firstOne;
+        List::Iterator temp2 = firstSec;
+        while (temp.ifNext()&&temp2.ifNext()) {
+            assert(temp.getPack().getValue() == temp2.getPack().getValue());
+            assert(temp.getPack().getSize() == temp2.getPack().getSize());
+            assert(temp.getPack().getPrice() == temp2.getPack().getPrice());
+            assert(!strcmp(temp.getPack().getName(), temp2.getPack().getName()));
+            ++temp;
+            ++temp2;
         }
-        assert(temp->getPack().getValue() == temp2->getPack().getValue());
-        assert(temp->getPack().getSize() == temp2->getPack().getSize());
-        assert(temp->getPack().getPrice() == temp2->getPack().getPrice());
-        assert(!strcmp(temp->getPack().getName(), temp2->getPack().getName()));
+        assert(temp.getPack().getValue() == temp2.getPack().getValue());
+        assert(temp.getPack().getSize() == temp2.getPack().getSize());
+        assert(temp.getPack().getPrice() == temp2.getPack().getPrice());
+        assert(!strcmp(temp.getPack().getName(), temp2.getPack().getName()));
         return 1;
     } else return 0;
 }
@@ -169,11 +169,13 @@ int main() {
     list1.sort();
     printList(list1, 1);
     cout<<endl;
-    printList(list1, 0);
+    //printList(list1, 0);
     assert(list1.ifSorted());
     //Проверка вставки с сортировкой
     temp.setInfo(correctName6, correctNum8, correctNum2);
     list1.insertWSort(temp);
     assert(list1.ifSorted());
+#endif
+#if DEBUG == 3
 #endif
 }
