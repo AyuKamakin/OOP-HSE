@@ -1,0 +1,173 @@
+#include <iostream>
+#include <cstring>
+#include <cassert>
+#include <fstream>
+#include "Package.h"
+#include "PackOfCoins.h"
+
+using namespace std;
+
+#define DEBUG 2
+#define incorrectNum1 1000000000
+#define incorrectNum2 -100
+#define correctNum1 10
+#define correctNum2 99
+#define correctNum3 50
+#define correctNum4 75
+#define correctNum5 6843
+#define correctNum6 3
+#define correctNum7 5
+#define correctNum8 863
+#define bigNum 10000000
+#define one 1
+#define correctName1 "box"
+#define correctName2 "fridge"
+#define correctName3 "package"
+#define correctName4 "What"
+#define correctName5 "orange"
+#define correctName6 "small"
+#define incorrectName "aaaaaaaaaaaar"
+#include "List.h"
+void printList(List list, const bool how) {
+    if(list.getLen()==0) return;
+    List::Iterator start;
+    if (how) start = list.head();
+    else start = list.tail();
+    if (!start.ifPrev()) {
+        if (*start) {
+            List::Iterator temp = start;
+            int i = 1;
+            while (temp.ifNext()) {
+                cout<< "num " << i << "; name: "<<temp.getName()<<"; size: "<<temp.getSize()<<"; price: "<<temp.getPrice()<<", value " << temp.getValue()<< endl;
+                ++temp;
+                i++;
+            }
+            cout<< "num " << i << "; name: "<<temp.getName()<<"; size: "<<temp.getSize()<<"; price: "<<temp.getPrice()<<", value " << temp.getValue()<< endl;
+
+        }
+    }
+    else {
+        if (*start) {
+            List::Iterator temp = start;
+            int i = list.getLen();
+            while (temp.ifPrev()) {
+                cout<< "num " << i << "; name: "<<temp.getName()<<"; size: "<<temp.getSize()<<"; price: "<<temp.getPrice()<<", value " << temp.getValue()<< endl;
+                temp--;
+                i--;
+            }
+
+            cout<< "num " << i << "; name: "<<temp.getName()<<"; size: "<<temp.getSize()<<"; price: "<<temp.getPrice()<<", value " << temp.getValue()<< endl;
+        }
+    }
+}
+
+bool compare(const List& list1, const List& list2) {
+    List::Iterator firstOne = list1.head();
+    List::Iterator firstSec = list2.head();
+    if (*firstOne != 0 && *firstSec != 0 && !firstOne.ifPrev() && !firstSec.ifPrev() &&
+        list1.getLen() == list2.getLen()) {
+        List::Iterator temp = firstOne;
+        List::Iterator temp2 = firstSec;
+        while (temp.ifNext()&&temp2.ifNext()) {
+            assert(temp.getValue() == temp2.getValue());
+            assert(temp.getPack().getSize() == temp2.getSize());
+            assert(temp.getPack().getPrice() == temp2.getPrice());
+            assert(!strcmp(temp.getName(), temp2.getName()));
+            ++temp;
+            ++temp2;
+        }
+        assert(temp.getValue() == temp2.getValue());
+        assert(temp.getPack().getSize() == temp2.getSize());
+        assert(temp.getPack().getPrice() == temp2.getPrice());
+        assert(!strcmp(temp.getName(), temp2.getName()));
+        return 1;
+    } else return 0;
+}
+
+int main() {
+#if DEBUG == 1
+    //тест стандартного консруктора и методов получения параметров класса Package
+
+    Package test=Package(correctName1, incorrectNum1,correctNum1);
+    assert(test.getSize()==0);
+    assert(!strcmp(test.getName(),correctName1));
+    assert(test.getPrice()==correctNum1);
+    test.setInfo(correctName2, correctNum2, incorrectNum2);
+    assert(test.getSize()==correctNum2);
+    assert(!strcmp(test.getName(),correctName2));
+    assert(test.getPrice()==0);
+    //методы изменения параметров
+    //конструктор копирования
+    Package test2=Package(test);
+    assert(test.getSize()==test2.getSize());
+    assert(!strcmp(test.getName(),test2.getName()));
+    assert(test.getPrice()==test2.getPrice());
+    //конструктор по умолчанию
+    Package test3=Package();
+    assert(test3.getSize()==0);
+    assert(!strcmp(test3.getName(),""));
+    assert(test3.getPrice()==0);
+    test3.setName(incorrectName);
+    assert(!strcmp(test3.getName(),""));
+#endif
+#if DEBUG == 2
+    //Конструктор по умолчанию
+    List list1 = List();
+    int *a = new int;
+    *a = list1.getLen();
+    Package temp = Package(correctName1, correctNum1, correctNum4);
+    //Проверка методов вставки
+    list1.insertWSort(temp);
+    Package test= (list1.tail()->getPack());
+    temp.setInfo(correctName2, correctNum4, correctNum3);
+    list1.add(temp);
+    assert(list1.tail()->getPack().getValue() != test.getValue());
+    temp.setInfo(correctName3, 1000000, 1);
+    test= list1.getElem(list1.getLen() - 1)->getPack();
+    list1.insertBetween(temp, list1.getLen() - 1, list1.getLen());
+    assert(list1.getElem(list1.getLen() - 1)->getPack().getValue() != test.getValue());
+    temp.setInfo(correctName4, correctNum7, correctNum8);
+    test= (*list1.head()).getPack();
+    list1.insertBetween(temp, 0, 1);
+    assert((*list1.head()).getPack().getValue() != test.getValue());
+    temp.setInfo(correctName5, correctNum5, correctNum6);
+    test= list1.getElem(3)->getPack();
+    list1.insertBetween(temp, 2, 3);
+    assert(list1.getElem(3)->getPack().getValue() != test.getValue());
+    temp.setInfo(incorrectName, incorrectNum1, incorrectNum2);
+    //этой вставки не должно произойти, неверное имя у temp
+    list1.insertBetween(temp, 4, 5);
+    assert(*a + 5 == list1.getLen());
+    //конструктор копирования
+    List list2 = List(list1);
+    assert(compare(list1, list2));
+    *a = list2.getLen();
+    //проверка частичного удаления
+    list2.del(1);
+    assert(*a - 1 == list2.getLen());
+    assert(!compare(list1, list2));
+    //полное удаление элементов в списке
+    list2.destruction();
+    assert(list2.getLen() == 0);
+    //запись и считывание из файла
+    list1.toFile("toFrom.txt");
+    list2.fromFile("toFrom.txt");
+    assert(compare(list1, list2));
+    delete a;
+    list2.destruction();
+    //Проверка сортировки и вывода списка
+    assert(!list1.ifSorted());
+    list1.sort();
+    printList(list1, 1);
+    cout<<endl;
+    //printList(list1, 0);
+    assert(list1.ifSorted());
+    //Проверка вставки с сортировкой
+    temp.setInfo(correctName6, correctNum8, correctNum2);
+    list1.insertWSort(temp);
+    assert(list1.ifSorted());
+#endif
+#if DEBUG == 3
+    PackOfCoins pack= PackOfCoins(correctName1,16789);
+#endif
+}
