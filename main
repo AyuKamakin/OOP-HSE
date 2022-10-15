@@ -3,10 +3,11 @@
 #include <cassert>
 #include <fstream>
 #include "Package.h"
+#include "PackOfCoins.h"
 
 using namespace std;
 
-#define DEBUG 2
+#define DEBUG 3
 #define incorrectNum1 1000000000
 #define incorrectNum2 -100
 #define correctNum1 10
@@ -25,6 +26,11 @@ using namespace std;
 #define correctName4 "What"
 #define correctName5 "orange"
 #define correctName6 "small"
+#define coinsName1 "coins1"
+#define coinsName2 "coins2"
+#define coinsName3 "coins3"
+#define coinsName4 "coins4"
+
 #define incorrectName "aaaaaaaaaaaar"
 #include "List.h"
 void printList(List list, const bool how) {
@@ -33,19 +39,17 @@ void printList(List list, const bool how) {
     if (how) start = list.head();
     else start = list.tail();
     if (!start.ifPrev()) {
+       // cout<<"print from head";
         if (*start) {
             List::Iterator temp = start;
             int i = 1;
             while (temp.ifNext()) {
-                cout << "num " << i << ": " ;
-                temp.getPack().Print();
-                cout<<", value " << temp.getPack().getValue()<< endl;
+                cout<< "num " << i << "; name: "<<temp.getName()<<"; size: "<<temp.getSize()<<"; price: "<<temp.getPrice()<<", value " << temp.getValue()<< endl;
                 ++temp;
                 i++;
             }
-            cout << "num " << i << ": ";
-            temp.getPack().Print();
-            cout<<", value " << temp.getPack().getValue()<< endl;
+            cout<< "num " << i << "; name: "<<temp.getName()<<"; size: "<<temp.getSize()<<"; price: "<<temp.getPrice()<<", value " << temp.getValue()<< endl;
+
         }
     }
     else {
@@ -53,15 +57,12 @@ void printList(List list, const bool how) {
             List::Iterator temp = start;
             int i = list.getLen();
             while (temp.ifPrev()) {
-                cout << "num " << i << ": " ;
-                temp.getPack().Print();
-                cout<<", value " << temp.getPack().getValue()<< endl;
+                cout<< "num " << i << "; name: "<<temp.getName()<<"; size: "<<temp.getSize()<<"; price: "<<temp.getPrice()<<", value " << temp.getValue()<< endl;
                 temp--;
                 i--;
             }
-            cout << "num " << i << ": " ;
-            temp.getPack().Print();
-            cout<<", value " << temp.getPack().getValue()<< endl;
+
+            cout<< "num " << i << "; name: "<<temp.getName()<<"; size: "<<temp.getSize()<<"; price: "<<temp.getPrice()<<", value " << temp.getValue()<< endl;
         }
     }
 }
@@ -74,17 +75,17 @@ bool compare(const List& list1, const List& list2) {
         List::Iterator temp = firstOne;
         List::Iterator temp2 = firstSec;
         while (temp.ifNext()&&temp2.ifNext()) {
-            assert(temp.getPack().getValue() == temp2.getPack().getValue());
-            assert(temp.getPack().getSize() == temp2.getPack().getSize());
-            assert(temp.getPack().getPrice() == temp2.getPack().getPrice());
-            assert(!strcmp(temp.getPack().getName(), temp2.getPack().getName()));
+            assert(temp.getValue() == temp2.getValue());
+            assert(temp.getSize() == temp2.getSize());
+            assert(temp.getPrice() == temp2.getPrice());
+            assert(!strcmp(temp.getName(), temp2.getName()));
             ++temp;
             ++temp2;
         }
-        assert(temp.getPack().getValue() == temp2.getPack().getValue());
-        assert(temp.getPack().getSize() == temp2.getPack().getSize());
-        assert(temp.getPack().getPrice() == temp2.getPack().getPrice());
-        assert(!strcmp(temp.getPack().getName(), temp2.getPack().getName()));
+        assert(temp.getValue() == temp2.getValue());
+        assert(temp.getSize() == temp2.getSize());
+        assert(temp.getPrice() == temp2.getPrice());
+        assert(!strcmp(temp.getName(), temp2.getName()));
         return 1;
     } else return 0;
 }
@@ -102,10 +103,6 @@ int main() {
     assert(!strcmp(test.getName(),correctName2));
     assert(test.getPrice()==0);
     //методы изменения параметров
-    test.setSize(correctNum3);
-    assert(test.getSize()==correctNum3);
-    test.setPrice(correctNum4);
-    assert(test.getPrice()==correctNum4);
     //конструктор копирования
     Package test2=Package(test);
     assert(test.getSize()==test2.getSize());
@@ -177,5 +174,55 @@ int main() {
     assert(list1.ifSorted());
 #endif
 #if DEBUG == 3
+    PackOfCoins coins1= PackOfCoins(coinsName1,16789);
+    PackOfCoins coins2= PackOfCoins(coinsName2,12);
+    PackOfCoins coins3= PackOfCoins(coinsName3,84);
+    PackOfCoins coins4= PackOfCoins(coinsName4,16789);
+    List list;
+    list.add(coins1);
+    for(int i=1;i<=list.getLen();i++){
+        list.Print(i);
+    }
+    cout<<endl;
+
+    list.insertWSort(coins2);
+    for(int i=1;i<=list.getLen();i++){
+        list.Print(i);
+    }
+    cout<<endl;
+
+    list.insertBetween(coins3,0,1);
+    for(int i=1;i<=list.getLen();i++){
+        list.Print(i);
+    }
+    cout<<endl;
+
+    List::Iterator it=list.head();
+    Package temp = Package(correctName1, correctNum1, correctNum4);
+    list.insertWSort(temp);
+    for(int i=1;i<=list.getLen();i++){
+        list.Print(i);
+    }
+    cout<<endl;
+    temp.setInfo(correctName3, 1000000, 1);
+    list.add(temp);
+    for(int i=1;i<=list.getLen();i++){
+        list.Print(i);
+    }
+    cout<<endl;
+    temp.setInfo(correctName4, 88, correctNum8);
+    list.insertBetween(temp,3,4);
+    for(int i=1;i<=list.getLen();i++){
+        list.Print(i);
+    }
+    cout<<endl;
+    list.toFile("toFrom.txt");
+    List list2;
+    list2.fromFile("toFrom.txt");
+    for(int i=1;i<=list2.getLen();i++){
+        list2.Print(i);
+    }
+    cout<<endl;
+    cout<<compare(list,list2);
 #endif
 }
