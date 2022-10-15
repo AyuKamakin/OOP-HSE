@@ -101,7 +101,7 @@ public:
     void Print(const int& pos) const;;//доделано
 
 
-    void sort() const;;//доделать
+    void sort();;//доделать
 
     bool ifSorted() const;;//доделано
 private:
