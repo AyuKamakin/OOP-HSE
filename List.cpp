@@ -131,7 +131,7 @@ void List::Print(const int &pos) const {
             temp = temp->prev();
         }
     }
-    cout << "size " << temp->getSize() << ", price " << temp->getPrice() << ", value "
+    cout <<"name "<< temp->getName()<< " size " << temp->getSize() << ", price " << temp->getPrice() << ", value "
          << temp->getValue() << endl;
 
 }
