@@ -21,7 +21,8 @@ List::List(const List &L) {
     if (L.len == 0) return;
     Node *temp = L.first;
     while (temp->ifNext()) {
-        add(temp->getPack());
+    if(temp->typeOfData==1) add(temp->getPack());
+    else if(temp->typeOfData==2) add(temp->getCoins());
         temp = temp->next();
     }
     add(temp->getPack());
@@ -139,6 +140,15 @@ void List::Print(const int &pos) const {
 void List::add(const Package &n) {
     if (!strcmp(n.getName(), "")) return;
     Node *temp = new Node(n);
+    addBase(temp);
+
+}
+void List::add(const PackOfCoins &n) {
+    if (!strcmp(n.getName(), "")) return;
+    Node *temp = new Node(n);
+    addBase(temp);
+}
+void List::addBase(Node* temp){
     temp->setNextNull();
     if (len == 0) {
         first = temp;
@@ -150,12 +160,22 @@ void List::add(const Package &n) {
     last = temp;
     len++;
 }
-
 void List::insertBetween(const Package &n, const int &pos1, const int &pos2) {
     if (pos1 == pos2 || pos2 - pos1 > 1 || pos1 < 0
         || pos2 < 1 || pos1 > len - 1 || pos2 > len || !strcmp(n.getName(), ""))
         return;
     Node *temp = new Node(n);
+    insertBetweenBase(temp, pos1,pos2);
+
+}
+void List::insertBetween(const PackOfCoins &n, const int &pos1, const int &pos2) {
+    if (pos1 == pos2 || pos2 - pos1 > 1 || pos1 < 0
+        || pos2 < 1 || pos1 > len - 1 || pos2 > len || !strcmp(n.getName(), ""))
+        return;
+    Node *temp = new Node(n);
+    insertBetweenBase(temp, pos1,pos2);
+}
+void List::insertBetweenBase(Node* temp, const int &pos1, const int &pos2){
     if (pos1 == 0) {
         first->setPrev(temp);
         temp->setNext(first);
@@ -169,10 +189,18 @@ void List::insertBetween(const Package &n, const int &pos1, const int &pos2) {
     }
     len++;
 }
-
 void List::insertWSort(const Package &n) {
     if (!strcmp(n.getName(), "")) return;
     Node *temp = new Node(n);
+    insertWSortBase(temp);
+
+}
+void List::insertWSort(const PackOfCoins &n) {
+    if (!strcmp(n.getName(), "")) return;
+    Node *temp = new Node(n);
+    insertWSortBase(temp);
+}
+void List::insertWSortBase(Node* temp){
     if (len == 0) {
         first = last = temp;
         temp->setNextNull();
@@ -271,87 +299,10 @@ void List::sort() const {
     }
 }
 
-void List::add(const PackOfCoins &n) {
-    if (!strcmp(n.getName(), "")) return;
-    Node *temp = new Node(n);
-    temp->setNextNull();
-    if (len == 0) {
-        first = temp;
-        temp->setPrevNull();
-    } else {
-        temp->setPrev(last);
-        last->setNext(temp);
-    }
-    last = temp;
-    len++;
-}
 
-void List::insertBetween(const PackOfCoins &n, const int &pos1, const int &pos2) {
-    if (pos1 == pos2 || pos2 - pos1 > 1 || pos1 < 0
-        || pos2 < 1 || pos1 > len - 1 || pos2 > len || !strcmp(n.getName(), ""))
-        return;
-    Node *temp = new Node(n);
-    if (pos1 == 0) {
-        first->setPrev(temp);
-        temp->setNext(first);
-        temp->setPrevNull();
-        first = temp;
-    } else {
-        temp->setPrev(getElem(pos1));
-        temp->setNext(getElem(pos1)->next());
-        getElem(pos1)->next()->setPrev(temp);
-        getElem(pos1)->setNext(temp);
-    }
-    len++;
-}
 
-void List::insertWSort(const PackOfCoins &n) {
-    if (!strcmp(n.getName(), "")) return;
-    Node *temp = new Node(n);
-    if (len == 0) {
-        first = last = temp;
-        temp->setNextNull();
-        temp->setPrevNull();
-    } else if (len == 1) {
-        if (temp->getValue() > first->getValue()) {
-            first->setNext(temp);
-            temp->setPrev(first);
-            temp->setNextNull();
-            last = temp;
-        } else {
-            last = first;
-            first = temp;
-            temp->setNext(last);
-            temp->setPrevNull();
-            last->setNextNull();
-            last->setPrev(temp);
-        }
-    } else {
-        if (temp->getValue() <= first->getValue()) {
-            temp->setNext(first);
-            temp->setPrevNull();
-            first = temp;
-        } else if (temp->getValue() >= last->getValue()) {
-            last->setNext(temp);
-            temp->setNextNull();
-            temp->setPrev(last);
-            last = temp;
-        } else {
-            Node *curr = first;
-            Node *ncurr = curr->next();
-            while (!(curr->getValue() <= temp->getValue() &&
-                     ncurr->getValue() >= temp->getValue())) {
-                curr = ncurr;
-                ncurr = curr->next();
-            }
-            temp->setPrev(curr);
-            temp->setNext(ncurr);
-            curr->setNext(temp);
-            ncurr->setPrev(temp);
-        }
-    }
-    len++;
-}
+
+
 
 List::Node::Node() {
     innext= 0;
@@ -385,6 +336,10 @@ List::Node::~Node() {
 
 const Package& List::Node::getPack() {
     if(typeOfData==1)return data;
+    else return NULL;
+}
+const PackOfCoins& List::Node::getCoins() {
+    if(typeOfData==2)return data2;
     else return NULL;
 }
 
@@ -463,9 +418,11 @@ List::Node &List::Iterator::operator++() {
 List::Node *List::Iterator::operator*() { return curr; }
 
 const Package &List::Iterator::getPack() {
-    return curr->getPack();
+    return curr->data;
 }
-
+const PackOfCoins &List::Iterator::getCoins() {
+    return curr->data2;
+}
 void List::Iterator::setPrevNull() {
     curr->setNextNull();
 }
@@ -497,4 +454,20 @@ void List::Iterator::setPack(const Package &n) {
 void List::Iterator::set(List::Node *n) {
     curr=n;
 }
+
+const int32_t &List::Iterator::getSize() const {
+    return curr->getSize();
+}
+const int32_t &List::Iterator::getPrice() const {
+    return curr->getPrice();
+}
+
+const char *List::Iterator::getName() const {
+    return curr->getName();
+}
+
+const float &List::Iterator::getValue() const {
+    return curr->getValue();
+}
+
 
