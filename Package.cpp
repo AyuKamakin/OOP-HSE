@@ -71,19 +71,6 @@ void Package::setName(const char *newName) {
     else name= nullptr;
 }
 
-void Package::setSize(const int32_t &newSize) {
-    if(check)size = newSize;
-    else size=0;
-    innerSetValue();
-
-}
-
-void Package::setPrice(const int32_t &newPrice) {
-    if(check)price = newPrice;
-    else price=0;
-    innerSetValue();
-}
-
 const char *Package::getName() const {
     if(name!=NULL)return name;
     else return "";
@@ -103,3 +90,8 @@ void Package::innerSetValue() {
 void Package::Print() const {
     cout<<" name : "<<name<<"; size: "<<size<<"; price : "<<price<<" ";
 }
+
+const bool Package::type() const{
+    return 0;
+}
+
