@@ -33,7 +33,7 @@ using namespace std;
 
 #define incorrectName "aaaaaaaaaaaar"
 #include "List.h"
-void printList(List list, const bool how) {
+void printList(const List& list, const bool how) {
     if(list.getLen()==0) return;
     List::Iterator start;
     if (how) start = list.head();
@@ -180,49 +180,30 @@ int main() {
     PackOfCoins coins4= PackOfCoins(coinsName4,16789);
     List list;
     list.add(coins1);
-    for(int i=1;i<=list.getLen();i++){
-        list.Print(i);
-    }
-    cout<<endl;
-
     list.insertWSort(coins2);
-    for(int i=1;i<=list.getLen();i++){
-        list.Print(i);
-    }
-    cout<<endl;
 
     list.insertBetween(coins3,0,1);
-    for(int i=1;i<=list.getLen();i++){
-        list.Print(i);
-    }
-    cout<<endl;
-
     List::Iterator it=list.head();
     Package temp = Package(correctName1, correctNum1, correctNum4);
+
     list.insertWSort(temp);
-    for(int i=1;i<=list.getLen();i++){
-        list.Print(i);
-    }
-    cout<<endl;
+
     temp.setInfo(correctName3, 1000000, 1);
     list.add(temp);
-    for(int i=1;i<=list.getLen();i++){
-        list.Print(i);
-    }
-    cout<<endl;
+
     temp.setInfo(correctName4, 88, correctNum8);
     list.insertBetween(temp,3,4);
-    for(int i=1;i<=list.getLen();i++){
-        list.Print(i);
-    }
-    cout<<endl;
+
     list.toFile("toFrom.txt");
     List list2;
     list2.fromFile("toFrom.txt");
-    for(int i=1;i<=list2.getLen();i++){
-        list2.Print(i);
+    assert(compare(list,list2));
+    printList(list,1);
+    list.sort();
+    for(int i=1;i<=list.getLen();i++){
+        list.Print(i);
     }
-    cout<<endl;
-    cout<<compare(list,list2);
+    printList(list,1);
+    printList(list,0);
 #endif
 }
