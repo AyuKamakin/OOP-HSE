@@ -70,7 +70,19 @@ void List::toFile(const string &filename) {
 }
 
 void List::destruction() {
-    while (len != 0) del(1);
+    if(len==1) delete first;
+    else if(len>1){
+        Node* temp1=first;
+        Node* temp2=first->next();
+        while (len != 1){
+            delete temp1;
+            temp1=temp2;
+            temp2=temp1->next();
+            len--;
+        }
+        delete last;
+        len--;
+    }
 }
 
 void List::del(const int &pos) {
