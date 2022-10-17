@@ -11,9 +11,9 @@ public:
     //PackOfCoins(const char* newName, const int32_t& newSize, const int32_t& newPrice){};
     PackOfCoins(const char* newName, const int32_t& newPrice);;
     PackOfCoins(const char* newName);;
-    void setInfo(const char *newName, const int32_t &newSize, const int32_t &newPrice);;
-    void setInfo(const char *newName, const int32_t &newPrice);;
-    void setPrice(const int32_t& newPrice);
+    bool setInfo(const char *newName, const int32_t &newSize, const int32_t &newPrice);;
+    bool setInfo(const char *newName, const int32_t &newPrice);;
+    bool setPrice(const int32_t& newPrice);
     virtual const bool type() const;;
 
 private:
