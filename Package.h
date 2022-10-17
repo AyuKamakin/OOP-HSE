@@ -23,8 +23,8 @@ public:
     ~Package();
 
     virtual // методы класса
-    void setInfo(const char* newName, const int32_t& newSize, const int32_t& newPrice);
-    void setName(const char* newName);
+    bool setInfo(const char* newName, const int32_t& newSize, const int32_t& newPrice);
+    bool setName(const char* newName);
     const char* getName() const;
     const int32_t& getSize() const;
     const int32_t& getPrice() const;
