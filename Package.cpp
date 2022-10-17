@@ -56,19 +56,19 @@ Package::~Package() {
 #endif
 }
 
-void Package::setInfo(const char *newName, const int32_t &newSize, const int32_t &newPrice) {
+bool Package::setInfo(const char *newName, const int32_t &newSize, const int32_t &newPrice) {
     if(strlen(strdup(newName))<=maxLen)name = strdup(newName);
-    else name= nullptr;
+    else return 0;
     if(check)size = newSize;
-    else size=0;
+    else return 0;
     if(check)price = newPrice;
-    else price=0;
+    else return 0;
     innerSetValue();
 }
 
-void Package::setName(const char *newName) {
+bool Package::setName(const char *newName) {
     if(strlen(strdup(newName))<=maxLen)name = strdup(newName);
-    else name= nullptr;
+    else return 0;
 }
 
 const char *Package::getName() const {
