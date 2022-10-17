@@ -59,15 +59,15 @@ public:
 
         Node &operator--(int);
 
-        const Package& getPack();;
-        const PackOfCoins& getCoins();
+        const Package& getPack()const;;
+        const PackOfCoins& getCoins()const;
         const int32_t& getSize() const;
         const int32_t &getPrice() const;
         const char *getName() const;
         const float &getValue() const;
         void setPack(const Package &n);
-        const bool ifNext();;
-        const bool ifPrev();;
+        const bool ifNext()const;;
+        const bool ifPrev() const;;
         void setNext(Iterator n);;
         void setPrev(Iterator n);;
         void setNextNull();;
@@ -87,18 +87,18 @@ public:
     Node* tail() const;;;
     Node* getElem(const int& pos) const;;
 
-    void add(const Package& n);;
-    void add(const PackOfCoins& n);;//доделано
-    void insertBetween(const Package& n, const int& pos1, const int& pos2);;
-    void insertBetween(const PackOfCoins& n, const int& pos1, const int& pos2);;//доделано
+    bool add(const Package& n);;
+    bool add(const PackOfCoins& n);;//доделано
+    bool insertBetween(const Package& n, const int& pos1, const int& pos2);;
+    bool insertBetween(const PackOfCoins& n, const int& pos1, const int& pos2);;//доделано
 
-    void insertWSort(const Package& n);;
-    void insertWSort(const PackOfCoins& n);; //доделано
+    bool insertWSort(const Package& n);;
+    bool insertWSort(const PackOfCoins& n);; //доделано
 
-    void fromFile(const string& filename);;//доделано
-    void toFile(const string& filename);;//доделано
+    bool fromFile(const string& filename);;//доделано
+    void toFile(const string& filename) const;;//доделано
 
-    void Print(const int& pos) const;;//доделано
+    bool Print(const int& pos) const;;//доделано
 
 
     void sort();;//доделать
