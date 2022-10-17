@@ -42,41 +42,33 @@ PackOfCoins::PackOfCoins(const char *newName) {
     price=0;
     size=0;
 }
-void PackOfCoins::setInfo(const char *newName, const int32_t &newSize, const int32_t &newPrice) {
+bool PackOfCoins::setInfo(const char *newName, const int32_t &newSize, const int32_t &newPrice) {
     if(strlen(strdup(newName))<=maxLen)name = strdup(newName);
-    else name= nullptr;
+    else return 0;
+    if(newPrice>=minInt&&newPrice<maxInt){
+        price = newPrice;
+        setCoinsSize();
+        innerSetValue();
+    }
+    else return 0;
+}
+bool PackOfCoins::setInfo(const char *newName, const int32_t &newPrice) {
+    if(strlen(strdup(newName))<=maxLen)name = strdup(newName);
+    else return 0;
     if(newPrice>=minInt&&newPrice<maxInt){
         price = newPrice;
         setCoinsSize();
     }
-    else{
-        price=0;size=0;
-    }
+    else return 0;
     innerSetValue();
     setCoinsSize();
 }
-void PackOfCoins::setInfo(const char *newName, const int32_t &newPrice) {
-    if(strlen(strdup(newName))<=maxLen)name = strdup(newName);
-    else name= nullptr;
+bool PackOfCoins::setPrice(const int32_t &newPrice) {
     if(newPrice>=minInt&&newPrice<maxInt){
         price = newPrice;
         setCoinsSize();
     }
-    else{
-        price=0;size=0;
-    }
-    innerSetValue();
-    setCoinsSize();
-}
-void PackOfCoins::setPrice(const int32_t &newPrice) {
-    if(newPrice>=minInt&&newPrice<maxInt){
-        price = newPrice;
-        setCoinsSize();
-    }
-    else{
-        price=0;
-        size=0;
-    }
+    else return 0;
 }
 
 const bool PackOfCoins::type() const {return 1;}
