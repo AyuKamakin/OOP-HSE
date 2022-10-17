@@ -34,10 +34,11 @@ List::~List() {
     destruction();
 }
 
-void List::fromFile(const string &filename) {
+bool List::fromFile(const string &filename) {
     ifstream file;
     file.open(filename);
-    string name;
+    if (!(file.is_open())) return 0;
+        string name;
     int32_t size, price;
     int8_t type;
     Package temp;
@@ -54,7 +55,7 @@ void List::fromFile(const string &filename) {
     file.close();
 }
 
-void List::toFile(const string &filename) {
+void List::toFile(const string &filename) const {
     if (len == 0) return;
     ofstream file;
     file.open(filename);
@@ -123,12 +124,12 @@ const int &List::getLen() const {
 }
 
 
-void List::Print(const int &pos) const {
+bool List::Print(const int &pos) const {
     if (pos < 1 || pos > len) {
 #if DEBUG == 1
         cout << "Incorrect position\n";
 #endif
-        return;
+        return 0;
     }
     Node *temp;
     if (pos <= len / 2) {
@@ -142,21 +143,24 @@ void List::Print(const int &pos) const {
             temp = temp->prev();
         }
     }
-    cout << "name " << temp->getName() << " size " << temp->getSize() << ", price " << temp->getPrice() << ", value "
-         << temp->getValue() << endl;
-
+    if(temp->getName()!= nullptr) {
+        cout << "name " << temp->getName() << " size " << temp->getSize() << ", price " << temp->getPrice()
+             << ", value "
+             << temp->getValue() << endl;
+    }
+    else return 0;
 }
 
 //Добавление элемента
-void List::add(const Package &n) {
-    if (!strcmp(n.getName(), "")) return;
+bool List::add(const Package &n) {
+    if (!strcmp(n.getName(), "")) return 0;
     Node *temp = new Node(n);
     addBase(temp);
 
 }
 
-void List::add(const PackOfCoins &n) {
-    if (!strcmp(n.getName(), "")) return;
+bool List::add(const PackOfCoins &n) {
+    if (!strcmp(n.getName(), "")) return 0;
     Node *temp = new Node(n);
     addBase(temp);
 }
@@ -174,19 +178,19 @@ void List::addBase(Node *temp) {
     len++;
 }
 
-void List::insertBetween(const Package &n, const int &pos1, const int &pos2) {
+bool List::insertBetween(const Package &n, const int &pos1, const int &pos2) {
     if (pos1 == pos2 || pos2 - pos1 > 1 || pos1 < 0
         || pos2 < 1 || pos1 > len - 1 || pos2 > len || !strcmp(n.getName(), ""))
-        return;
+        return 0;
     Node *temp = new Node(n);
     insertBetweenBase(temp, pos1, pos2);
 
 }
 
-void List::insertBetween(const PackOfCoins &n, const int &pos1, const int &pos2) {
+bool List::insertBetween(const PackOfCoins &n, const int &pos1, const int &pos2) {
     if (pos1 == pos2 || pos2 - pos1 > 1 || pos1 < 0
         || pos2 < 1 || pos1 > len - 1 || pos2 > len || !strcmp(n.getName(), ""))
-        return;
+        return 0;
     Node *temp = new Node(n);
     insertBetweenBase(temp, pos1, pos2);
 }
@@ -206,15 +210,15 @@ void List::insertBetweenBase(Node *temp, const int &pos1, const int &pos2) {
     len++;
 }
 
-void List::insertWSort(const Package &n) {
-    if (!strcmp(n.getName(), "")) return;
+bool List::insertWSort(const Package &n) {
+    if (!strcmp(n.getName(), "")) return 0;
     Node *temp = new Node(n);
     insertWSortBase(temp);
 
 }
 
-void List::insertWSort(const PackOfCoins &n) {
-    if (!strcmp(n.getName(), "")) return;
+bool List::insertWSort(const PackOfCoins &n) {
+    if (!strcmp(n.getName(), "")) return 0;
     Node *temp = new Node(n);
     insertWSortBase(temp);
 }
@@ -280,71 +284,73 @@ List::Node *List::getElem(const int &pos) const {
 }
 
 List::Node *List::head() const {
-    return first;
+    if(len!=0) return first;
+    else return nullptr;
 }
 
 List::Node *List::tail() const {
-    return last;
+    if(len!=0 )return last;
+    else return nullptr;
 }
 
 bool List::ifSorted() const {
-    Node *temp = first;
-    while (temp->ifNext()) {
-        if (temp->next()->getValue() < temp->getValue()) return 0;
-        temp = temp->next();
-    }
-    return 1;
+    if(len>1) {
+        Node *temp = first;
+        while (temp->ifNext()) {
+            if (temp->next()->getValue() < temp->getValue()) return 0;
+            temp = temp->next();
+        }
+        return 1;
+    } else return 1;
 }
 
 void List::sort() {
-    Node *curr = first;
-    Node *ncurr = first->next();
-    while(!ifSorted()) {
+    if(len>1) {
+        Node *curr = first;
+        Node *ncurr = first->next();
+        while (!ifSorted()) {
 
-        if (ncurr->getValue() < curr->getValue()) {
-            if (curr->ifPrev()&&ncurr->ifNext()) {
-                curr->prev()->setNext(ncurr);
-                ncurr->setPrev(curr->prev());
-                curr->setNext(ncurr->next());
-                ncurr->next()->setPrev(curr);
-                ncurr->setNext(curr);
-                curr->setPrev(ncurr);
-                curr=ncurr;
-                ncurr=ncurr->next();
-            }
-            else if (curr==first) {
-                curr->setNext(ncurr->next());
-                ncurr->next()->setPrev(curr);
-                curr->setPrev(ncurr);
-                ncurr->setNext(curr);
-                ncurr->setPrevNull();
-                first = ncurr;
-                curr = first->next();
-                ncurr = curr->next();
+            if (ncurr->getValue() < curr->getValue()) {
+                if (curr->ifPrev() && ncurr->ifNext()) {
+                    curr->prev()->setNext(ncurr);
+                    ncurr->setPrev(curr->prev());
+                    curr->setNext(ncurr->next());
+                    ncurr->next()->setPrev(curr);
+                    ncurr->setNext(curr);
+                    curr->setPrev(ncurr);
+                    curr = ncurr;
+                    ncurr = ncurr->next();
+                } else if (curr == first) {
+                    curr->setNext(ncurr->next());
+                    ncurr->next()->setPrev(curr);
+                    curr->setPrev(ncurr);
+                    ncurr->setNext(curr);
+                    ncurr->setPrevNull();
+                    first = ncurr;
+                    curr = first->next();
+                    ncurr = curr->next();
 
+                } else if (ncurr == last) {
+                    last = curr;
+                    curr->setNextNull();
+                    ncurr->setPrev(curr->prev());
+                    ncurr->prev()->setNext(ncurr);
+                    curr->setPrev(ncurr);
+                    ncurr->setNext(curr);
+                    curr = first;
+                    ncurr = first->next();
+                }
+            } else {
+                if (ncurr != last) {
+                    curr = ncurr;
+                    ncurr = ncurr->next();
+                } else {
+                    curr = first;
+                    ncurr = first->next();
+                }
             }
-            else if (ncurr==last) {
-                last = curr;
-                curr->setNextNull();
-                ncurr->setPrev(curr->prev());
-                ncurr->prev()->setNext(ncurr);
-                curr->setPrev(ncurr);
-                ncurr->setNext(curr);
-                curr = first;
-                ncurr = first->next();
-            }
+
         }
-        else{
-            if(ncurr!=last){
-            curr=ncurr;
-            ncurr=ncurr->next();
-            }
-            else{
-                curr=first;
-                ncurr=first->next();
-            }
-        }
-
     }
 }
 
@@ -468,11 +474,11 @@ List::Node &List::Iterator::operator++() {
 
 List::Node *List::Iterator::operator*() { return curr; }
 
-const Package &List::Iterator::getPack() {
+const Package &List::Iterator::getPack() const{
     return curr->data;
 }
 
-const PackOfCoins &List::Iterator::getCoins() {
+const PackOfCoins &List::Iterator::getCoins() const{
     return curr->data2;
 }
 
@@ -492,11 +498,11 @@ void List::Iterator::setNext(List::Iterator n) {
     curr->setNext(n.curr);
 }
 
-const bool List::Iterator::ifPrev() {
+const bool List::Iterator::ifPrev()const {
     return curr->ifPrev();
 }
 
-const bool List::Iterator::ifNext() {
+const bool List::Iterator::ifNext()const {
     return curr->ifNext();
 }
 
@@ -523,5 +529,6 @@ const char *List::Iterator::getName() const {
 const float &List::Iterator::getValue() const {
     return curr->getValue();
 }
+
 
 
