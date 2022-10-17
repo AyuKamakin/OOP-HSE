@@ -189,7 +189,7 @@ int main() {
     assert(list.getLen()==3);
     PackOfCoins coins2=coins1;
     coins1.setInfo(incorrectName, correctNum4);
-    assert(coins1.getPrice()!=coins2.getPrice());
+    assert(coins1.getPrice()==coins2.getPrice());
     Package temp = Package(correctName1, correctNum5, correctNum6);
 
     list.insertWSort(temp);
