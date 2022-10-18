@@ -64,10 +64,12 @@ bool Package::setInfo(const char *newName, const int32_t &newSize, const int32_t
     if(check)price = newPrice;
     else return 0;
     innerSetValue();
+    return 1;
 }
 
 bool Package::setName(const char *newName) {
-    if(strlen(strdup(newName))<=maxLen)name = strdup(newName);
+    if(strlen(strdup(newName))<=maxLen){name = strdup(newName);
+        return 1;}
     else return 0;
 }
 
@@ -94,4 +96,3 @@ void Package::Print() const {
 const bool Package::type() const{
     return 0;
 }
-
