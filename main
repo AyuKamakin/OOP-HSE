@@ -32,62 +32,60 @@ using namespace std;
 #define coinsName4 "coins4"
 
 #define incorrectName "aaaaaaaaaaaar"
+
 #include "List.h"
-void printList(const List& list, const bool how) {
-    if(list.getLen()==0) return;
-    else if(list.getLen()==1)
-        cout<< "num " << 1 << "; name: "<<list.head()->getName()<<"; size: "<<list.head()->getSize()<<"; price: "<<list.head()->getPrice()<<", value " << list.head()->getValue()<< endl;
+
+void printList(const List &list, const bool how) {
+    if (list.getLen() == 0) return;
+    else if (list.getLen() == 1)
+        cout << "num " << 1 << "; name: " << list.head()->getName() << "; size: " << list.head()->getSize()
+             << "; price: " << list.head()->getPrice() << ", value " << list.head()->getValue() << endl;
     List::Iterator start;
     if (how) start = list.head();
     else start = list.tail();
     if (!start.ifPrev()) {
-       // cout<<"print from head";
+        // cout<<"print from head";
         if (*start) {
             List::Iterator temp = start;
-            int i = 1;
-            while (temp.ifNext()) {
-                cout<< "num " << i << "; name: "<<temp.getName()<<"; size: "<<temp.getSize()<<"; price: "<<temp.getPrice()<<", value " << temp.getValue()<< endl;
+            for (int i = 1; i <= list.getLen(); i++) {
+                cout << "num " << i << "; name: " << temp.getName() << "; size: " << temp.getSize() << "; price: "
+                     << temp.getPrice() << ", value " << temp.getValue() << endl;
                 ++temp;
-                i++;
             }
-            cout<< "num " << i << "; name: "<<temp.getName()<<"; size: "<<temp.getSize()<<"; price: "<<temp.getPrice()<<", value " << temp.getValue()<< endl;
-
         }
-    }
-    else {
+    } else {
         if (*start) {
             List::Iterator temp = start;
             int i = list.getLen();
-            while (temp.ifPrev()) {
-                cout<< "num " << i << "; name: "<<temp.getName()<<"; size: "<<temp.getSize()<<"; price: "<<temp.getPrice()<<", value " << temp.getValue()<< endl;
+            for (int i = list.getLen(); i >= 1; i--) {
+                cout << "num " << i << "; name: " << temp.getName() << "; size: " << temp.getSize() << "; price: "
+                     << temp.getPrice() << ", value " << temp.getValue() << endl;
                 temp--;
-                i--;
             }
-
-            cout<< "num " << i << "; name: "<<temp.getName()<<"; size: "<<temp.getSize()<<"; price: "<<temp.getPrice()<<", value " << temp.getValue()<< endl;
         }
     }
 }
 
-bool compare(const List& list1, const List& list2) {
-    if(list1.getLen()!=list2.getLen())return 0;
-    else if(list1.getLen()==0&&list2.getLen()==0) return 1;
+bool compare(const List &list1, const List &list2) {
+    if (list1.getLen() != list2.getLen())return 0;
+    else if (list1.getLen() == 0 && list2.getLen() == 0) return 1;
     List::Iterator firstOne = list1.head();
     List::Iterator firstSec = list2.head();
     if (*firstOne != 0 && *firstSec != 0 && !firstOne.ifPrev() && !firstSec.ifPrev() &&
         list1.getLen() == list2.getLen()) {
         List::Iterator temp = firstOne;
         List::Iterator temp2 = firstSec;
-        while (temp.ifNext()&&temp2.ifNext()) {
-            if(temp.getValue() == temp2.getValue()&&temp.getSize() == temp2.getSize()&&temp.getPrice() == temp2.getPrice()&&
-                    !strcmp(temp.getName(), temp2.getName())){
+        while (temp.ifNext() && temp2.ifNext()) {
+            if (temp.getValue() == temp2.getValue() && temp.getSize() == temp2.getSize() &&
+                temp.getPrice() == temp2.getPrice() &&
+                !strcmp(temp.getName(), temp2.getName()) && temp.getType() == temp2.getType()) {
                 ++temp;
                 ++temp2;
-            }
-            else return 0;
+            } else return 0;
         }
-        if(temp.getValue() == temp2.getValue()&&temp.getSize() == temp2.getSize()&&temp.getPrice() == temp2.getPrice()&&
-           !strcmp(temp.getName(), temp2.getName()))
+        if (temp.getValue() == temp2.getValue() && temp.getSize() == temp2.getSize() &&
+            temp.getPrice() == temp2.getPrice() &&
+            !strcmp(temp.getName(), temp2.getName()) && temp.getType() == temp2.getType())
             return 1;
         else return 0;
     } else return 0;
@@ -177,44 +175,43 @@ int main() {
     assert(list1.ifSorted());
 #endif
 #if DEBUG == 3
-    PackOfCoins coins1= PackOfCoins(coinsName1,correctNum1);
+    PackOfCoins coins1 = PackOfCoins(coinsName1, correctNum1);
     List list;
-    list.add(coins1);
-    assert(list.getLen()==1);
-    coins1.setInfo(coinsName2,correctNum4);
-    list.insertWSort(coins1);
-    assert(list.getLen()==2);
-    coins1.setInfo(coinsName3,correctNum2);
-    list.insertBetween(coins1,0,1);
-    assert(list.getLen()==3);
-    PackOfCoins coins2=coins1;
+
+    list.add(&coins1);
+    assert(list.getLen() == 1);
+    PackOfCoins coins2 =PackOfCoins(coinsName2, correctNum4);
+    list.insertWSort(&coins2);
+    assert(list.getLen() == 2);
+    PackOfCoins coins3 =PackOfCoins(coinsName3, correctNum2);
+    list.insertBetween(&coins3, 0, 1);
+    assert(list.getLen() == 3);
+    PackOfCoins coins4 = coins1;
     coins1.setInfo(incorrectName, correctNum4);
-    assert(coins1.getPrice()==coins2.getPrice());
+    //assert(coins1.getPrice() == coins2.getPrice());
     Package temp = Package(correctName1, correctNum5, correctNum6);
-
-    list.insertWSort(temp);
-    assert(list.getLen()==4);
-
-    temp.setInfo(correctName3, correctNum8, 1);
-    list.add(temp);
-    assert(list.getLen()==5);
-
-    temp.setInfo(correctName4, correctNum2, correctNum7);
-    list.insertBetween(temp,3,4);
-    assert(temp.getValue()==list.getElem(4)->getValue());
+    list.insertWSort(&temp);
+    assert(list.getLen() == 4);
+    Package temp2 = Package(correctName3, correctNum8, 1);
+    list.add(&temp2);
+    assert(list.getLen() == 5);
+    Package temp3 = Package(correctName4, correctNum2, correctNum7);
+    list.insertBetween(&temp3, 3, 4);
+    //assert(temp.getValue() == list.getElem(4)->getValue());
+    assert(temp.type() != coins1.type());
     list.toFile("toFrom.txt");
     List list2;
     list2.fromFile("toFrom.txt");
-    assert(compare(list,list2));
-    printList(list,1);
+    //assert(compare(list, list2));
+    printList(list, 1);
     list.sort();
-    assert(!compare(list,list2));
-    printList(list,1);
+    assert(!compare(list, list2));
+    printList(list, 1);
     list.destruction();
     list2.destruction();
-    assert(list.getLen()==0);
-    //cout<<list.getLen()<<' '<<list2.getLen();
-    printList(list,1);
-    printList(list,0);
+    assert(list.getLen() == 0);
+    cout<<list.getLen()<<' '<<list2.getLen();
+    printList(list, 1);
+    printList(list, 0);
 #endif
 }
