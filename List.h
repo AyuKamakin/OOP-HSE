@@ -14,12 +14,9 @@ public:
     public:
         Node* innext= nullptr;
         Node* inprev= nullptr;
-        Package data;
-        PackOfCoins data2;
-        int8_t typeOfData;
+        Package *data;
         Node();
-        Node(const Package& temp);
-        Node(const PackOfCoins& temp);
+        Node(Package* temp);
         ~Node();
         Node* next() const;
         Node* prev() const;
@@ -27,16 +24,15 @@ public:
         void setPrev(Node* n);;
         void setNextNull();;
         void setPrevNull();;
-        void setPack(const Package& n);
-        void setPack(const PackOfCoins& n);
-        const Package& getPack();
-        const PackOfCoins& getCoins();;
+        void setPack(Package* n);
+        const Package* getPack();
         const bool ifNext() const;
         const bool ifPrev() const;
         const int32_t& getSize() const;
         const int32_t &getPrice() const;
         const char *getName() const;
         const float &getValue() const;
+        const bool getType()const;;
     };
 protected:
     Node* first;
@@ -59,20 +55,20 @@ public:
 
         Node &operator--(int);
 
-        const Package& getPack()const;;
-        const PackOfCoins& getCoins()const;
+        const Package* getPack()const;;
         const int32_t& getSize() const;
         const int32_t &getPrice() const;
         const char *getName() const;
         const float &getValue() const;
-        void setPack(const Package &n);
+        void setPack(Package* n);
         const bool ifNext()const;;
-        const bool ifPrev() const;;
-        void setNext(Iterator n);;
-        void setPrev(Iterator n);;
-        void setNextNull();;
+        const bool ifPrev() const;
+        void setNext(Iterator n);
+        void setPrev(Iterator n);
+        void setNextNull();
         void set(Node* n);
-        void setPrevNull();;
+        void setPrevNull();
+        bool getType()const;
     };
 
 public:
@@ -87,27 +83,16 @@ public:
     Node* tail() const;;;
     Node* getElem(const int& pos) const;;
 
-    bool add(const Package& n);;
-    bool add(const PackOfCoins& n);;//доделано
-    bool insertBetween(const Package& n, const int& pos1, const int& pos2);;
-    bool insertBetween(const PackOfCoins& n, const int& pos1, const int& pos2);;//доделано
-
-    bool insertWSort(const Package& n);;
-    bool insertWSort(const PackOfCoins& n);; //доделано
+    bool add(Package*);;
+    bool insertBetween(Package *n, const int& pos1, const int& pos2);
+    bool insertWSort(Package* n);;
 
     bool fromFile(const string& filename);;//доделано
     void toFile(const string& filename) const;;//доделано
 
     bool Print(const int& pos) const;;//доделано
 
+    void sort();
 
-    void sort();;//доделать
-
-    bool ifSorted() const;;//доделано
-private:
-    void insertBetweenBase(Node *temp, const int &pos1, const int &pos2);
-
-    void addBase(Node *temp);
-
-    void insertWSortBase(Node *temp);
+    bool ifSorted() const;
 };
