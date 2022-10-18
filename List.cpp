@@ -21,7 +21,7 @@ List::List(const List &L) {
     if (L.len == 0) return;
     Node *temp = L.first;
     while (temp->ifNext()) {
-       add(temp->data);
+        add(temp->data);
         temp = temp->next();
     }
     add(temp->data);
@@ -39,18 +39,17 @@ bool List::fromFile(const string &filename) {
     string name;
     int32_t size, price;
     bool type;
-    Package* temp;
-    PackOfCoins* temp2;
     while (file >> name >> size >> price >> type) {
         if(!type) {
-            temp->setInfo(name.c_str(), size, price);
+            Package* temp=new Package(name.c_str(),size,price);
             add(temp);
         } else {
-           temp2->setInfo(name.c_str(), price);
-            add(temp2);
+            PackOfCoins* temp=new PackOfCoins(name.c_str(),price);
+            add(temp);
         }
     }
     file.close();
+    return 1;
 }
 
 void List::toFile(const string &filename) const {
@@ -473,5 +472,4 @@ const float &List::Iterator::getValue() const {
 bool List::Iterator::getType() const{
     return curr->getType();
 }
-
 
