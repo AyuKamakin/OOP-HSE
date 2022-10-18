@@ -7,20 +7,19 @@
 #define maxInt 2147483646
 #define minInt 1
 #define maxLen 10
-#include <iostream>
 
 void PackOfCoins::setCoinsSize() {
-        int n=price;
-        size=0;
-        size+=(int)n/100;
-        n=n%100;
-        size+=(int)n/50;
-        n=n%50;
-        size+=(int)n/10;
-        n=n%10;
-        size+=(int)n/5;
-        n=n%5;
-        size+=n;
+    int n=price;
+    size=0;
+    size+=(int)n/100;
+    n=n%100;
+    size+=(int)n/50;
+    n=n%50;
+    size+=(int)n/10;
+    n=n%10;
+    size+=(int)n/5;
+    n=n%5;
+    size+=n;
 }
 
 PackOfCoins::PackOfCoins(const char *newName, const int32_t &newPrice) {
@@ -51,6 +50,7 @@ bool PackOfCoins::setInfo(const char *newName, const int32_t &newSize, const int
         innerSetValue();
     }
     else return 0;
+    return 1;
 }
 bool PackOfCoins::setInfo(const char *newName, const int32_t &newPrice) {
     if(strlen(strdup(newName))<=maxLen)name = strdup(newName);
@@ -74,9 +74,10 @@ bool PackOfCoins::setPrice(const int32_t &newPrice) {
 const bool PackOfCoins::type() const {return 1;}
 
 PackOfCoins::PackOfCoins() {
-price=0;
-size=0;
-name="";
+    price=0;
+    size=0;
+    name="";
 }
+
 
 
