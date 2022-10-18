@@ -22,8 +22,8 @@ public:
     //деструктор
     ~Package();
 
-    virtual // методы класса
-    bool setInfo(const char* newName, const int32_t& newSize, const int32_t& newPrice);
+     // методы класса
+     virtual bool setInfo(const char* newName, const int32_t& newSize, const int32_t& newPrice);
     bool setName(const char* newName);
     const char* getName() const;
     const int32_t& getSize() const;
