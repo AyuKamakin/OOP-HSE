@@ -152,7 +152,12 @@ bool List::Print(const int &pos) const {
 
 bool List::add(Package* n) {
     if (!strcmp(n->getName(), "")) return 0;
-    Node *temp = new Node(n);
+    Package* dat;
+    if(n){
+        if(!n->type()) dat=new Package(n->getName(),n->getSize(),n->getPrice());
+        else dat=new PackOfCoins(n->getName(),n->getPrice());
+    }
+    Node *temp = new Node(dat);
     temp->setNextNull();
     if (len == 0) {
         first = temp;
@@ -169,7 +174,12 @@ bool List::insertBetween(Package* n, const int &pos1, const int &pos2) {
     if (pos1 == pos2 || pos2 - pos1 > 1 || pos1 < 0
         || pos2 < 1 || pos1 > len - 1 || pos2 > len || !strcmp(n->getName(), ""))
         return 0;
-    Node *temp = new Node(n);
+    Package* dat;
+    if(n){
+        if(!n->type()) dat=new Package(n->getName(),n->getSize(),n->getPrice());
+        else dat=new PackOfCoins(n->getName(),n->getPrice());
+    }
+    Node *temp = new Node(dat);
     if (pos1 == 0) {
         first->setPrev(temp);
         temp->setNext(first);
@@ -186,7 +196,12 @@ bool List::insertBetween(Package* n, const int &pos1, const int &pos2) {
 }
 bool List::insertWSort(Package* n) {
     if (!strcmp(n->getName(), "")) return 0;
-    Node *temp = new Node(n);
+    Package* dat;
+    if(n){
+        if(!n->type()) dat=new Package(n->getName(),n->getSize(),n->getPrice());
+        else dat=new PackOfCoins(n->getName(),n->getPrice());
+    }
+    Node *temp = new Node(dat);
     if (len == 0) {
         first = last = temp;
         temp->setNextNull();
@@ -272,7 +287,6 @@ void List::sort() {
         Node *curr = first;
         Node *ncurr = first->next();
         while (!ifSorted()) {
-
             if (ncurr->getValue() < curr->getValue()) {
                 if (curr->ifPrev() && ncurr->ifNext()) {
                     curr->prev()->setNext(ncurr);
@@ -319,8 +333,8 @@ void List::sort() {
 
 
 List::Node::Node() {
-    innext = 0;
-    inprev = 0;
+    innext = nullptr;
+    inprev = nullptr;
 }
 
 List::Node::Node(Package *temp) {
@@ -472,4 +486,3 @@ const float &List::Iterator::getValue() const {
 bool List::Iterator::getType() const{
     return curr->getType();
 }
-
