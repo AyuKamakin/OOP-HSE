@@ -1,6 +1,6 @@
 #include <iostream>
-#include "Package.h"
-#include "PackOfCoins.h"
+#include "package.h"
+#include "packOfCoins.h"
 #define UNTITLED_LIST_H
 using namespace std;
 
@@ -75,7 +75,7 @@ public:
     List();;
     List(const List& L);; //доделано
     ~List();;
-    void del(const int& pos);;
+    bool del(const int& pos);;
     void destruction();;
 
     const int& getLen() const;;
