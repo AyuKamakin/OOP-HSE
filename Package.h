@@ -1,5 +1,6 @@
 #ifndef UNTITLED_PACKAGE_H
 #define UNTITLED_PACKAGE_H
+#include <cstdint>
 using namespace std;
 class Package
 {
@@ -23,7 +24,7 @@ public:
     ~Package();
 
      // методы класса
-     virtual bool setInfo(const char* newName, const int32_t& newSize, const int32_t& newPrice);
+    virtual int8_t setInfo(const char* newName, const int32_t& newSize, const int32_t& newPrice);
     bool setName(const char* newName);
     const char* getName() const;
     const int32_t& getSize() const;
