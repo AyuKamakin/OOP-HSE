@@ -62,7 +62,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>60</y>
+       <y>80</y>
        <width>341</width>
        <height>311</height>
       </rect>
@@ -92,7 +92,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="line_price"/>
+         <widget class="QSpinBox" name="spinBox_price"/>
         </item>
        </layout>
       </item>
@@ -106,7 +106,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="line_size"/>
+         <widget class="QSpinBox" name="spinBox_size"/>
         </item>
        </layout>
       </item>
@@ -125,11 +125,24 @@
       <string>Добавить с сортировкой</string>
      </property>
     </widget>
-    <widget class="QRadioButton" name="radioButton_packageType">
+    <widget class="QRadioButton" name="radioButton_package">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>30</y>
+       <width>241</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string> поклажа - стандартный багаж</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_packOfCoins">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
        <width>201</width>
        <height>24</height>
       </rect>
@@ -139,7 +152,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_3">
+   <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
       <x>380</x>
@@ -151,7 +164,7 @@
     <property name="title">
      <string>Вся коллекция</string>
     </property>
-    <widget class="QTextBrowser" name="textBrowser">
+    <widget class="QTextBrowser" name="textBrowser_list">
      <property name="geometry">
       <rect>
        <x>10</x>
