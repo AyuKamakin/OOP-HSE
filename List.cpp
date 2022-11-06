@@ -1,9 +1,10 @@
+#include <cstdint>
 #include <iostream>
 #include <fstream>
-#include "Package.h"
-#include "PackOfCoins.h"
+#include "package.h"
+#include "packOfCoins.h"
 
-#include "List.h"
+#include "list.h"
 #include <cstring>
 
 #define DEBUG 0
@@ -11,12 +12,12 @@ using namespace std;
 
 //конструкторы по умолчанию и копирования
 List::List() {
-    first = last = NULL;
+    first = last = nullptr;
     len = 0;
 }
 
 List::List(const List &L) {
-    first = last = NULL;
+    first = last = nullptr;
     len = 0;
     if (L.len == 0) return;
     Node *temp = L.first;
@@ -43,9 +44,11 @@ bool List::fromFile(const string &filename) {
         if(!type) {
             Package* temp=new Package(name.c_str(),size,price);
             add(temp);
+            delete temp;
         } else {
             PackOfCoins* temp=new PackOfCoins(name.c_str(),price);
             add(temp);
+            delete temp;
         }
     }
     file.close();
@@ -83,8 +86,8 @@ void List::destruction() {
     }
 }
 
-void List::del(const int &pos) {
-    if (pos < 1 || pos > len) return;
+bool List::del(const int &pos) {
+    if (pos < 1 || pos > len) return false;
     if (len == 1) {
         delete first;
         len--;
@@ -113,6 +116,7 @@ void List::del(const int &pos) {
         }
         len--;
     }
+    return true;
 }
 
 //вывод количества эл-тов, элементов или элемента
