@@ -1,8 +1,5 @@
-//
-// Created by Мой компьютер on 15.10.2022.
-//
-
-#include "PackOfCoins.h"
+#include "packofcoins.h"
+#include <cstdint>
 #include <cstring>
 #define maxInt 2147483646
 #define minInt 1
@@ -41,27 +38,28 @@ PackOfCoins::PackOfCoins(const char *newName) {
     price=0;
     size=0;
 }
-bool PackOfCoins::setInfo(const char *newName, const int32_t &newSize, const int32_t &newPrice) {
-    if(strlen(strdup(newName))<=maxLen)name = strdup(newName);
-    else return 0;
-    if(newPrice>=minInt&&newPrice<maxInt){
+int8_t PackOfCoins::setInfo(const char *newName, const int32_t &newSize, const int32_t &newPrice) {
+    if(strlen(strdup(newName))<=maxLen && strcmp(newName,"")!=0)name = strdup(newName);
+    else return 1;
+    if(newPrice>=1&&newPrice<maxInt){
         price = newPrice;
         setCoinsSize();
         innerSetValue();
     }
-    else return 0;
-    return 1;
+    else return 2;
+    return 0;
 }
-bool PackOfCoins::setInfo(const char *newName, const int32_t &newPrice) {
-    if(strlen(strdup(newName))<=maxLen)name = strdup(newName);
-    else return 0;
-    if(newPrice>=minInt&&newPrice<maxInt){
+int8_t PackOfCoins::setInfo(const char *newName, const int32_t &newPrice) {
+    if(strlen(strdup(newName))<=maxLen&& strcmp(newName,"")!=0)name = strdup(newName);
+    else return 1;
+    if(newPrice>=1&&newPrice<maxInt){
         price = newPrice;
         setCoinsSize();
     }
-    else return 0;
+    else return 2;
     innerSetValue();
     setCoinsSize();
+    return 0;
 }
 bool PackOfCoins::setPrice(const int32_t &newPrice) {
     if(newPrice>=minInt&&newPrice<maxInt){
@@ -78,6 +76,5 @@ PackOfCoins::PackOfCoins() {
     size=0;
     name="";
 }
-
 
 
