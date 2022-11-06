@@ -1,10 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "List.h"
-#include "Package.h"
-#include "PackOfCoins.h"
 #include <QMainWindow>
-
+#include "list.h"
+#include "package.h"
+#include "packofcoins.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -17,7 +16,23 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_pushButton_add_clicked();
+
+    void on_pushButton_add_wSort_clicked();
+
+    void on_pushButton_sort_clicked();
+
+    void on_pushButton_delition_clicked();
+
+    void on_pushButton_del_clicked();
+
+    void on_pushButton_toFile_clicked();
+
+    void on_pushButton_fromFile_clicked();
+
 private:
     Ui::MainWindow *ui;
+    List list;
 };
 #endif // MAINWINDOW_H
