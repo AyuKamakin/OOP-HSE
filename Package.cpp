@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstring>
-#include "Package.h"
+#include "package.h"
 #include <fstream>
 
 #define DEBUG 0
@@ -56,19 +56,19 @@ Package::~Package() {
 #endif
 }
 
-bool Package::setInfo(const char *newName, const int32_t &newSize, const int32_t &newPrice) {
-    if(strlen(strdup(newName))<=maxLen)name = strdup(newName);
-    else return 0;
-    if(check)size = newSize;
-    else return 0;
-    if(check)price = newPrice;
-    else return 0;
+int8_t Package::setInfo(const char *newName, const int32_t &newSize, const int32_t &newPrice) {
+    if(strlen(strdup(newName))<=maxLen && strcmp(newName,"")!=0)name = strdup(newName);
+    else return 1;
+    if(check(newSize))size = newSize;
+    else return 3;
+    if(check(newPrice))price = newPrice;
+    else return 2;
     innerSetValue();
-    return 1;
+    return 0;
 }
 
 bool Package::setName(const char *newName) {
-    if(strlen(strdup(newName))<=maxLen){name = strdup(newName);
+    if(strlen(strdup(newName))<=maxLen && strcmp(newName,"")!=0){name = strdup(newName);
         return 1;}
     else return 0;
 }
