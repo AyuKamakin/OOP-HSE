@@ -31,6 +31,10 @@ private slots:
 
     void on_pushButton_fromFile_clicked();
 
+    void on_radioButton_package_clicked();
+
+    void on_radioButton_packOfCoins_clicked();
+
 private:
     Ui::MainWindow *ui;
     List list;
