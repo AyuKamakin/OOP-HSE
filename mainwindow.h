@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include <QMainWindow>
+#include <QMessageBox>
 #include "list.h"
 #include "package.h"
 #include "packofcoins.h"
@@ -27,16 +28,20 @@ private slots:
 
     void on_pushButton_del_clicked();
 
-    void on_pushButton_toFile_clicked();
+    void on_pushButton_toFile_clicked() const;
 
     void on_pushButton_fromFile_clicked();
 
-    void on_radioButton_package_clicked();
+    void on_radioButton_package_clicked() const;
 
-    void on_radioButton_packOfCoins_clicked();
+    void on_radioButton_packOfCoins_clicked()  const;
 
 private:
     Ui::MainWindow *ui;
     List list;
+    QMessageBox *msg;
+    void addingBase(bool how);
+    void textRenew() const;
+    void addToTail() const;
 };
 #endif // MAINWINDOW_H
