@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <fstream>
 
 using namespace std;
 #define STARTSIZE 1000
@@ -297,24 +298,57 @@ public:
             }
         }
         throw std::exception();
-    }
+    } //готово
 
     bool operator==(const HTable &other) {
-       if (count == other.count && table.size() == other.table.size() && sum == other.sum) {
-            for(int i=0;i<table.size();i++) {
+        if (count == other.count && table.size() == other.table.size() && sum == other.sum) {
+            for (int i = 0; i < table.size(); i++) {
                 if (table[i] != nullptr) {
                     auto curr = table[i];
                     while (curr != nullptr) {
-                   if (other.table[hashPos(table[i]->key)] == nullptr ||
-                      other.table[hashPos(table[i]->key)]->value != table[i]->value) return false;
-                     curr=curr->next;
-                     }
+                        if (other.table[hashPos(table[i]->key)] == nullptr ||
+                            other.table[hashPos(table[i]->key)]->value != table[i]->value)
+                            return false;
+                        curr = curr->next;
+                    }
                 }
-          }
+            }
             return true;
         } else return false;
     } // готово
 
+    int8_t toFile(const string &filename) const {
+        if (count == 0) return 2;
+        ofstream file;
+        file.open(filename);
+        for (int i = 0; i < table.size(); i++) {
+            if (file.is_open()){
+                if (table[i] != nullptr) {
+                    auto curr = table[i];
+                    while (curr != nullptr) {
+                        file << curr->key << " " << curr->value << "\n";
+                        curr = curr->next;
+                    }
+                }
+            }
+            else return 0;
+        }
+        file.close();
+        return 1;
+    }
+    int8_t fromFile(const string &filename){
+        ifstream file;
+        file.open(filename);
+        if (!(file.is_open())) return 0;
+        K n;
+        V v;
+        bool type;
+        while (file >> n >> v) {
+            insert(n,v);
+        }
+        file.close();
+        return 1;
+    }
 public:
     vector<hList *> table;
     std::size_t count;
