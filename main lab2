@@ -1,0 +1,71 @@
+#include <iostream>
+#include <cstring>
+#include <cassert>
+#include <fstream>
+#include "Package.h"
+#include "PackOfCoins.h"
+#include <typeinfo>
+#include <cstdint>
+#include <random>
+#include "HTable.cpp"
+
+using namespace std;
+#define FILENAME "test.txt"
+#define DEBUG 4
+#define CORRECTNUM1 10
+#define CORRECTNUM2 99
+#define CORRECTNUM3 50
+#define CORRECTNAME1 "box"
+#define CORRECTNAME2 "fridge"
+#define CORRECTNAME3 "package"
+
+
+#include "List.h"
+
+int main() {
+    //тест конструктора по умолчанию
+    HTable<string, int> table;
+    int ct = table.getCount();
+    assert(table.getCount() == 0);
+    //тест вставки
+    string a = CORRECTNAME1;
+    int b = CORRECTNUM1;
+    table.insert(a, b);
+    assert(table.getCount() == ct + 1);
+    assert(table.inTable(CORRECTNAME1)); //метод наличия ключа в таблице
+    assert(!table.inTable(CORRECTNAME2));
+    assert(table[CORRECTNAME1]==CORRECTNUM1);//тест оператора []
+    //тест вставки имеющегося ключа
+    b=CORRECTNUM2;
+    table.insert(a, b);
+    assert(table.getCount() == ct + 1);
+    //тест суммы значений в таблице и вставки второй пары
+    a=CORRECTNAME2;
+    table.insert(a, b);
+    assert(table.getSum()==CORRECTNUM1+CORRECTNUM2);
+    assert(table.getCount()==ct+2);
+    //тест конструктора копирования
+    HTable<string, int> table3=table;
+    assert(table==table3);
+    assert(table3.getCount()==table.getCount());
+    assert(table3.getSum()==table.getSum());
+    //тест записи и считывания из файла
+    table.toFile(FILENAME);
+    HTable<string, int> table2;
+    table2.fromFile(FILENAME);
+    assert(table==table2);
+    assert(table2.getCount()==table.getCount());
+    assert(table2.getSum()==table.getSum());
+    //тест удаления несуществующего ключа
+    table2.removePair(CORRECTNAME3);
+    assert(table2.getCount()==table.getCount());
+    //тест удаления существующего ключа
+    table2.removePair(CORRECTNAME1);
+    assert(table2.getCount()==table.getCount()-1);
+    assert(table2.getSum()==CORRECTNUM2);
+    //тест очистки таблицы
+    table2.clearTable();
+    assert(table2.getCount()==0);
+    assert(table2.getSum()==0);
+    cout<<"All done"<<endl;
+}
