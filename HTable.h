@@ -214,7 +214,7 @@ public:
                     if (prev != nullptr) prev->next = curr->next;
                     else table[pos] = curr->next;
                 }
-                sum = sum - curr->data;
+                sum = sum - curr->value;
                 delete curr;
                 count--;
                 return 1;
