@@ -62,7 +62,6 @@ public:
         clearTable();
         table.clear();
     } // деструктор
-
     void clearTable() {
         for (int i = 0; i < table.size(); i++) {
             while (table[i] != nullptr) {
@@ -82,41 +81,22 @@ public:
         }
     } //очиститель содержимого
 
-    int8_t toFile(const string &filename) const {
-        if (count == 0) return 2;
-        ofstream file;
-        file.open(filename);
-        for (int i = 0; i < table.size(); i++) {
-            if (file.is_open()){
-                if (table[i] != nullptr) {
-                    auto curr = table[i];
-                    while (curr != nullptr) {
-                        file << curr->key << " " << curr->value << "\n";
-                        curr = curr->next;
-                    }
+    const bool inTable(K nkey) const {
+        if (table[hashPos(nkey)] != nullptr) {
+            if (table[hashPos(nkey)]->key == nkey) {
+                return true;
+            } else {
+                auto curr = table[hashPos(nkey)];
+                while (curr->key != nkey && curr->next != nullptr) {
+                    curr = curr->next;
                 }
+                if (curr->key == nkey) return true;
+                else return false;
             }
-            else return 0;
-        }
-        file.close();
-        return 1;
-    } //запись в файл
+        } else return false;
+    }//Проверка наличия в таблице пары с введенным ключом
 
-    int8_t fromFile(const string &filename){
-        ifstream file;
-        file.open(filename);
-        if (!(file.is_open())) return 0;
-        K n;
-        V v;
-        bool type;
-        while (file >> n >> v) {
-            insert(n,v);
-        }
-        file.close();
-        return 1;
-    }// считывание из файла
-
-    int8_t insert(const K& nkey, const V& data) {
+    int8_t insert(const K& nkey,const V& data) {
         int pos = hashPos(nkey);
         auto *newNode = new hList;
         newNode->value = data;
@@ -147,9 +127,9 @@ public:
                 return 2;
             }
         }
-    } //вставка пары ключ-значение
+    } // вставка пары в таблицу
 
-    const int8_t& removePair(K nkey) {
+    int8_t removePair(K nkey) {
         int pos = hashPos(nkey);
         if (table[pos] == nullptr) {
             return 0;
@@ -173,50 +153,36 @@ public:
                 count--;
                 return 1;
             }
+            else return 2;
         }
-    } //удаление пары ключ-значение
+    }//удаление пар, имеющихся в таблице
 
-    const bool inTable(K nkey) const {
-        if (table[hashPos(nkey)] != nullptr) {
-            if (table[hashPos(nkey)]->key == nkey) {
-                return true;
-            } else {
-                auto curr = table[hashPos(nkey)];
-                while (curr->key != nkey && curr->next != nullptr) {
-                    curr = curr->next;
-                }
-                if (curr->key == nkey) return true;
-                else return false;
-            }
-        } else return false;
-    } //наличие ключа в таблице
-
-    const int& getCount() const {
+    const int getCount() const {
         return count;
-    } //количество элементов в таблице
+    }//возвращает число хранимых пар
 
-    const int& getSum() const {
+    const int getSum() const {
         return sum;
-    } //сумма элементов в таблице
+    }//возвращает сумму значений V
 
     const V &operator[](const K &nkey) const{
         int pos = hashPos(nkey);
         if (table[pos] != nullptr) {
             auto curr = table[pos];
-            while (curr->next != nullptr) {
+            while (curr != nullptr) {
                 if (curr->key == nkey) {
                     return curr->value;
                 }
+                if (curr->key != nkey&&curr->next== nullptr) {
+                    throw std::exception();
+                }
                 curr = curr->next;
-            }
-            if (curr->key != nkey) {
-                throw std::exception();
             }
         }
         throw std::exception();
     }
 
-    bool operator==(const HTable &other) const{
+    bool operator==(const HTable &other) const {
         if (count == other.count && table.size() == other.table.size() && sum == other.sum) {
             for (int i = 0; i < table.size(); i++) {
                 if (table[i] != nullptr) {
@@ -233,11 +199,47 @@ public:
         } else return false;
     }
 
+    int8_t toFile(const string &filename) const {
+        if (count == 0) return 2;
+        ofstream file;
+        file.open(filename);
+        for (int i = 0; i < table.size(); i++) {
+            if (file.is_open()){
+                if (table[i] != nullptr) {
+                    auto curr = table[i];
+                    while (curr != nullptr) {
+                        file << curr->key << " " << curr->value << "\n";
+                        curr = curr->next;
+                    }
+                }
+            }
+            else return 0;
+        }
+        file.close();
+        return 1;
+    } //запись в файл
+    int8_t fromFile(const string &filename){
+        ifstream file;
+        file.open(filename);
+        if (!(file.is_open())) return 0;
+        K n;
+        V v;
+        bool type;
+        while (file >> n >> v) {
+            insert(n,v);
+        }
+        file.close();
+        return 1;
+    } //запись из файла
+
 private:
     vector<hList *> table;
     std::size_t count;
     int sum;
     int16_t hashConst;
+    const int hashPos(K key) const {
+        return abs(static_cast<int>(std::hash<K>()(key) % (STARTSIZE * hashConst)));
+    } //расчет позиции в таблице
     void contentsCheck() {
         if (count > table.size() / 2) {
             table.resize(table.size() * 10);
@@ -249,9 +251,5 @@ private:
                 }
             }
         } else return;
-    } //увеличение размера таблицы
-    const int hashPos(K key) const {
-        return abs(static_cast<int>(std::hash<K>()(key) % (STARTSIZE * hashConst)));
-    }//вычисление индекса в таблице
-
+    } //Проверка переполнения таблицы и ее пересборка
 };
