@@ -1,44 +1,45 @@
-# Домашние задания: Связный список и Хеш-таблица на C++
+# Homework Assignments: Linked List and Hash Table in C++
 
-## Обзор проекта
-В этом репозитории реализованы два домашних задания по созданию пользовательских структур данных на C++:
+## Project Overview
+This repository contains two homework assignments focused on implementing custom data structures in C++:
 
-1. **Связный список (List)**
-   - Реализован как двусвязный список с поддержкой вставки, удаления, сортировки и доступа к элементам.
-   - Элементы списка представлены классами `Package` и `PackOfCoins`, которые содержат информацию о названии, цене, размере и вычисленном значении.
-   - Поддержка итераторов для последовательного обхода элементов.
-   - Методы чтения из файла и записи в файл.
+1. **Linked List (List)**
+   - Implemented as a doubly linked list with support for insertion, deletion, sorting, and element access.
+   - List elements are represented by the classes `Package` and `PackOfCoins`, which store information about name, price, size, and computed value.
+   - Iterator support for sequential traversal of elements.
+   - Methods for reading from and writing to files.
 
-2. **Хеш-таблица (HTable)**
-   - Шаблонный класс `HTable<K, V>` реализует хеш-таблицу с разрешением коллизий через цепочки (linked list).
-   - Поддержка основных операций: вставка, удаление, поиск, проверка наличия ключа.
-   - Перегрузка операторов `[]` и `==` для удобного доступа и сравнения таблиц.
-   - Методы сохранения и загрузки таблицы из файла.
-   - Автоматическое увеличение размера таблицы при необходимости для поддержания эффективности.
+2. **Hash Table (HTable)**
+   - Template class `HTable<K, V>` implements a hash table with collision resolution using chaining (linked lists).
+   - Supports core operations: insertion, deletion, search, and key existence check.
+   - Overloaded `[]` and `==` operators for convenient access and table comparison.
+   - Methods for saving and loading the table from a file.
+   - Automatic resizing to maintain efficiency when needed.
 
-## Основные технологии
-- **Язык:** C++ (стандарт C++11 и выше)
-- **Библиотеки:** `<vector>`, `<string>`, `<fstream>`, `<functional>`
-- **Структуры данных:**
-  - Двусвязный список
-  - Хеш-таблица с цепочками
-- **Обработка файлов:** чтение и запись данных элементов для тестирования и сохранения состояния.
+## Key Technologies
+- **Language:** C++ (C++11 standard or higher)
+- **Libraries:** `<vector>`, `<string>`, `<fstream>`, `<functional>`
+- **Data Structures:**
+  - Doubly linked list
+  - Hash table with chaining
+- **File Handling:** Reading and writing element data for testing and state persistence.
 
-## Методы и функционал
+## Methods and Functionality
 ### List
-- `add(Package*)` — добавление элемента в конец списка.
-- `insertBetween(Package*, int, int)` — вставка элемента между двумя позициями.
-- `insertWSort(Package*)` — вставка элемента с сортировкой по значению.
-- `del(int)` — удаление элемента по позиции.
-- `sort()` — сортировка элементов по значению.
-- `fromFile(string)` и `toFile(string)` — загрузка и сохранение данных.
-- `Iterator` — класс для последовательного обхода списка.
+- `add(Package*)` — Adds an element to the end of the list.
+- `insertBetween(Package*, int, int)` — Inserts an element between two positions.
+- `insertWSort(Package*)` — Inserts an element maintaining sorted order by value.
+- `del(int)` — Deletes an element by position.
+- `sort()` — Sorts elements by value.
+- `fromFile(string)` and `toFile(string)` — Loads and saves data.
+- `Iterator` — Class for sequential traversal of the list.
 
 ### HTable
-- `insert(K, V)` — вставка пары ключ-значение.
-- `removePair(K)` — удаление пары по ключу.
-- `inTable(K)` — проверка наличия ключа.
-- `operator[](K)` — доступ к значению по ключу.
-- `operator==` — сравнение двух таблиц.
-- `toFile(string)` и `fromFile(string)` — сохранение и загрузка данных таблицы.
-- Автоматическое масштабирование таблицы для уменьшения коллизий.
+- `insert(K, V)` — Inserts a key-value pair.
+- `removePair(K)` — Removes a pair by key.
+- `inTable(K)` — Checks if a key exists.
+- `operator[](K)` — Accesses a value by key.
+- `operator==` — Compares two tables.
+- `toFile(string)` and `fromFile(string)` — Saves and loads table data.
+- Automatic table resizing to reduce collisions.
+
